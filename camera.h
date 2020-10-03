@@ -1,14 +1,15 @@
 #pragma once
 
 #include "planet.h"
+#include "player.h"
 
 class Camera {
   public:
 
     Camera();
 
-    void update(double fx, double fy, const Planet& map, unsigned int elapsed);
-    void snap(double fx, double fy, const Planet& map);
+    void update(const Player& focus, const Planet& map, unsigned int elapsed);
+    void snap(const Player& focus, const Planet& map);
 
     double xoffset() const { return xo_; }
     double yoffset() const { return yo_; }

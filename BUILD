@@ -30,6 +30,7 @@ cc_library(
         "@libgam//:spritemap",
         "@libgam//:text",
         ":camera",
+        ":characters",
         ":planet",
     ],
 )
@@ -42,8 +43,8 @@ cc_library(
         "stb_perlin.h",
     ],
     deps = [
-        "@libgam//:graphics",
         "@libgam//:spritemap",
+        ":rect",
     ],
 )
 
@@ -53,6 +54,32 @@ cc_library(
     hdrs = ["camera.h"],
     deps = [
         ":planet",
+        ":characters",
     ],
 )
 
+cc_library(
+    name = "rect",
+    srcs = ["rect.cc"],
+    hdrs = ["rect.h"],
+    deps = [
+        "@libgam//:graphics",
+    ]
+)
+
+cc_library(
+    name = "characters",
+    srcs = [
+        "character.cc",
+        "player.cc",
+    ],
+    hdrs = [
+        "character.h",
+        "player.h",
+    ],
+    deps = [
+        "@libgam//:spritemap",
+        ":planet",
+        ":rect",
+    ],
+)

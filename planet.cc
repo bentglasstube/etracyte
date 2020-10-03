@@ -1,7 +1,7 @@
 #include "planet.h"
 
-#include <assert.h>
 #include <algorithm>
+#include <cassert>
 #include <iostream>
 
 #define STB_PERLIN_IMPLEMENTATION
@@ -53,14 +53,14 @@ Planet::Planet() : sprites_("terrain.png", 18, 8, 8) {
   }
 }
 
-inline int sprite_for_tile(Planet::Tile t) {
-  switch (t) {
+int Planet::Tile::sprite() const {
+  switch (value_) {
     case Planet::Tile::Air:
-      return 0;
+      return 108;
     case Planet::Tile::Cave:
-      return 1;
+      return 109;
     case Planet::Tile::Rock:
-      return 2;
+      return 110;
     default:
       return 0;
   }
@@ -75,7 +75,7 @@ void Planet::draw(Graphics& graphics, int xo, int yo) const {
     int tx = std::floor(xo / kTileSize);
     int gx = -(xo % kTileSize);
     while (gx < graphics.width()) {
-      sprites_.draw(graphics, sprite_for_tile(get_tile(tx, ty)), gx, gy);
+      sprites_.draw(graphics, get_tile(tx, ty).sprite(), gx, gy);
       ++tx;
       gx += kTileSize;
     }
@@ -127,8 +127,22 @@ void Planet::set_tile(int x, int y, Tile t) {
 }
 
 Planet::Tile Planet::get_tile(int x, int y) const {
-  if (y < 0 || y >= (int)kMapHeight) return Tile::OOB;
-  return tiles_[(x % kMapWidth) + kMapWidth * y];
+  if (y < 0 || y >= (int)kMapHeight) return Tile(Tile::OOB, x % kMapWidth, y);
+  return Tile(tiles_[(x % kMapWidth) + kMapWidth * y], x % kMapWidth, y);
+}
+
+Planet::Tile Planet::collision(Rect box, double dx, double dy) const {
+  assert(dx == 0 || dy == 0);
+
+  if (dx != 0) {
+    const int x = (int) std::floor((dx < 0 ? box.left : box.right) / kTileSize);
+    return check_tiles(x, x + dx, (int) box.top / kTileSize, (int) box.bottom / kTileSize);
+  } else if (dy != 0) {
+    const int y = (int) std::floor(((dy < 0 ? box.top : box.bottom)) / kTileSize);
+    return check_tiles((int) box.left / kTileSize, (int) box.right / kTileSize, y, y + dy);
+  } else {
+    return Tile::Air;
+  }
 }
 
 bool Planet::wall(int x, int y) const {
@@ -140,4 +154,17 @@ bool Planet::wall(int x, int y) const {
       return true;
       break;
   }
+}
+
+Planet::Tile Planet::check_tiles(int x1, int x2, int y1, int y2) const {
+  const int dy = y1 < y2 ? 1 : -1;
+  const int dx = x1 < x2 ? 1 : -1;
+
+  for (int y = y1; y <= y2; y += dy) {
+    for (int x = x1; x <= x2; x += dx) {
+      const Tile t = get_tile(x, y);
+      if (t.obstructs()) return t;
+    }
+  }
+  return Tile::Air;
 }

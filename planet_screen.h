@@ -5,6 +5,7 @@
 
 #include "camera.h"
 #include "planet.h"
+#include "player.h"
 
 class PlanetScreen : public Screen {
   public:
@@ -21,7 +22,5 @@ class PlanetScreen : public Screen {
     Text text_;
     Planet planet_;
     Camera camera_;
-
-    double fx_, fy_;
-    bool scroll_;
+    Player astronaut_;
 };
