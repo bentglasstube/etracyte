@@ -14,7 +14,7 @@ class Planet {
 
     class Tile {
       public:
-        enum Value : uint8_t { Air, Rock, Cave, OOB };
+        enum Value : uint8_t { Air, Rock, Cave, OOB, Grass };
 
         Tile() = default;
         constexpr Tile(Value v) : Tile(v, -1, -1, 0) {}
@@ -28,7 +28,17 @@ class Planet {
           return Rect(x * kTileSize, y * kTileSize, (x + 1) * kTileSize, (y + 1) * kTileSize);
         }
 
-        bool obstructs() const { return value == Rock || value == OOB; }
+        bool obstructs() const {
+          switch (value) {
+            case Rock:
+            case OOB:
+            case Grass:
+              return true;
+            default:
+              return false;
+          }
+        }
+
         int sprite() const;
 
         Value value;

@@ -43,9 +43,11 @@ Planet::Planet() : sprites_("terrain.png", 9, 16, 16) {
     for (int y = 0; y < kMapHeight; ++y) {
       Tile t = get_tile(x, y);
       if (t == Tile::Cave) {
-        set_tile(x, y, Tile::Air);
-        if (++n == 2) break;
+        if (++n < 2) set_tile(x, y, Tile::Air);
       } else if (t == Tile::Rock) {
+        if (get_tile(x, y - 1) == Tile::Air) {
+          set_tile(x, y, Tile::Grass);
+        }
         break;
       }
     }
@@ -60,6 +62,8 @@ int Planet::Tile::sprite() const {
       return 18 + variety;
     case Planet::Tile::Rock:
       return 9 + variety;
+    case Planet::Tile::Grass:
+      return 27 + variety;
     default:
       return 0;
   }
