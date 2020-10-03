@@ -62,7 +62,7 @@ class Planet {
     int nearby(int x, int y, Tile t, int dist = 1) const;
     void smooth_caves();
 
-    float surface_x(size_t x) const { return x / 128.0f; }
-    float cave_x(size_t x) const { return x / 64.0f; }
-    float cave_y(size_t y) const { return y / 16.0f; }
+    double surface_x(int x) const { return x / 128.0f; }
+    double cave_x(int x) const { return x / 64.0f; }
+    double cave_y(int y) const { return y / 16.0f; }
 };

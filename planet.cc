@@ -123,12 +123,13 @@ int Planet::nearby(int x, int y, Tile t, int dist) const {
 void Planet::set_tile(int x, int y, Tile t) {
   assert(x >= 0 && x < (int)kMapWidth);
   assert(y >= 0 && y < (int)kMapHeight);
-  tiles_[x + kMapWidth * y] = t;
+  tiles_[x + kMapWidth * y] = Tile(t, x, y);
 }
 
 Planet::Tile Planet::get_tile(int x, int y) const {
-  if (y < 0 || y >= (int)kMapHeight) return Tile(Tile::OOB, x % kMapWidth, y);
-  return Tile(tiles_[(x % kMapWidth) + kMapWidth * y], x % kMapWidth, y);
+  if (y < 0) return Tile(Tile::Air, x, y);
+  if (y >= (int)kMapHeight) return Tile(Tile::Rock, x, y);
+  return tiles_[(x % kMapWidth) + kMapWidth * y];
 }
 
 Planet::Tile Planet::collision(Rect box, double dx, double dy) const {

@@ -20,6 +20,24 @@ void Player::draw(Graphics& graphics, int xo, int yo) const {
 #endif
 }
 
+void Player::move_left() {
+  facing_ = Facing::Left;
+  ax_ = -kAccel;
+}
+
+void Player::move_right() {
+  facing_ = Facing::Right;
+  ax_ = kAccel;
+}
+
+void Player::stop() {
+  ax_ = 0;
+}
+
+void Player::jump() {
+  if (grounded()) vy_ += kJumpSpeed;
+}
+
 void Player::updatex(const Planet& map, unsigned int elapsed) {
   vx_ += ax_ * elapsed;
   Planet::Tile tile = map.collision(boxh(), vx_ * elapsed, 0);
