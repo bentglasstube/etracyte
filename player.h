@@ -14,6 +14,11 @@ class Player : public Character {
     void move_right();
     void stop();
     void jump();
+    void duck();
+    void stand();
+
+    bool ducking() const { return ducking_; }
+    bool crouched() const { return grounded() && ducking(); }
 
   private:
 
@@ -28,6 +33,7 @@ class Player : public Character {
 
     double ax_;
     int timer_;
+    bool ducking_;
 
 #ifndef NDEBUG
     Rect xcol_, ycol_;

@@ -40,8 +40,17 @@ void Player::jump() {
   vy_ = -kJumpSpeed;
 }
 
+void Player::duck() {
+  ducking_ = true;
+}
+
+void Player::stand() {
+  ducking_ = false;
+}
+
 void Player::updatex(const Planet& map, unsigned int elapsed) {
-  vx_ += ax_ * elapsed;
+  if (!crouched()) vx_ += ax_ * elapsed;
+
   Planet::Tile tile = map.collision(boxh(), vx_ * elapsed, 0);
   if (tile.obstructs()) {
 #ifndef NDEBUG
@@ -79,6 +88,7 @@ Rect Player::boxv() const {
 }
 
 int Player::sprite() const {
+  if (ducking()) return 4;
   if (jumping()) return 4;
   if (walking()) return (timer_ / 128) % 4;
 

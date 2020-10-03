@@ -10,6 +10,12 @@ PlanetScreen::PlanetScreen() : text_("text.png"), planet_(), camera_(), astronau
 bool PlanetScreen::update(const Input& input, Audio&, unsigned int elapsed) {
   elapsed = std::min(64u, elapsed);
 
+  if (input.key_held(Input::Button::Down)) {
+    astronaut_.duck();
+  } else {
+    astronaut_.stand();
+  }
+
   if (input.key_held(Input::Button::Left)) {
     astronaut_.move_left();
   } else if (input.key_held(Input::Button::Right)) {
