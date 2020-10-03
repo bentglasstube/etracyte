@@ -5,7 +5,7 @@ PlanetScreen::PlanetScreen() : text_("text.png"), planet_(), camera_(), astronau
   camera_.snap(astronaut_, planet_);
 }
 
-bool PlanetScreen::update(const Input& input, Audio&, unsigned int elapsed) {
+bool PlanetScreen::update(const Input&, Audio&, unsigned int elapsed) {
   astronaut_.update(planet_, elapsed);
   camera_.update(astronaut_, planet_, elapsed);
 

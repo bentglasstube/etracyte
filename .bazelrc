@@ -5,3 +5,7 @@ build:win64 --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
 build:asmjs --crosstool_top=//toolchain:emscripten
 build:asmjs --cpu=asmjs
 build:asmjs --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
+build --cxxopt='-std=c++17'
+build --cxxopt='-pedantic'
+build --cxxopt='-Wextra'
+build --cxxopt='-Werror'
