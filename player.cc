@@ -84,7 +84,7 @@ Rect Player::boxh() const {
 }
 
 Rect Player::boxv() const {
-  return Rect(x_ - kHalfWidth + 4, y_ - kHeight, x_ + kHalfWidth - 4, y_);
+  return Rect(x_ - kHalfWidth + 4, y_ - kHeight + (jumping() || ducking() ? 4 : 0), x_ + kHalfWidth - 4, y_);
 }
 
 int Player::sprite() const {
