@@ -1,5 +1,7 @@
 #include "character.h"
 
+#include <cassert>
+
 Character::Character(int width, int height) :
   sprites_("sprites.png", 8, 16, 32),
   facing_(Facing::Right),

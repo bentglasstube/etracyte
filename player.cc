@@ -1,5 +1,7 @@
 #include "player.h"
 
+#include <cassert>
+
 Player::Player() : Character(kWidth, kHeight) {}
 
 void Player::update(const Planet& map, unsigned int elapsed) {
@@ -18,6 +20,25 @@ void Player::draw(Graphics& graphics, int xo, int yo) const {
   xcol_.draw(graphics, xo, yo, 0xff0000ff, false);
   ycol_.draw(graphics, xo, yo, 0x880000ff, false);
 #endif
+}
+
+void Player::move_left() {
+  facing_ = Facing::Left;
+  ax_ = -kAccel;
+}
+
+void Player::move_right() {
+  facing_ = Facing::Right;
+  ax_ = kAccel;
+}
+
+void Player::stop() {
+  ax_ = 0;
+}
+
+void Player::jump() {
+  // if (grounded())
+    vy_ = -kJumpSpeed;
 }
 
 void Player::updatex(const Planet& map, unsigned int elapsed) {

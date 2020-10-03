@@ -7,7 +7,7 @@
 #define STB_PERLIN_IMPLEMENTATION
 #include "stb_perlin.h"
 
-Planet::Planet() : sprites_("terrain.png", 18, 8, 8) {
+Planet::Planet() : sprites_("terrain.png", 9, 16, 16) {
   std::random_device d;
   rand_.seed(d());
 
@@ -16,10 +16,10 @@ Planet::Planet() : sprites_("terrain.png", 18, 8, 8) {
   std::uniform_int_distribution<int> rs(0, 255);
   const int seed = rs(rand_);
 
-  for (size_t x = 0; x < kMapWidth; ++x) {
+  for (int x = 0; x < kMapWidth; ++x) {
     int surface_height = 64 + (int)(64 * stb_perlin_turbulence_noise3(surface_x(x), 0, seed, 2.0f, 0.5f, 6));
 
-    for (size_t y = 0; y < kMapHeight - 1; ++y) {
+    for (int y = 0; y < kMapHeight - 1; ++y) {
       if ((int)y > surface_height) {
         float cave = stb_perlin_ridge_noise3(cave_x(x), cave_y(y), seed, 4.0f, 0.5f, 1.0f, 4);
         float threshold = 0.65 - 0.1 * (y - surface_height) / (float)(kMapHeight - surface_height);
@@ -39,9 +39,9 @@ Planet::Planet() : sprites_("terrain.png", 18, 8, 8) {
   smooth_caves();
   smooth_caves();
 
-  for (size_t x = 0; x < kMapWidth; ++x) {
+  for (int x = 0; x < kMapWidth; ++x) {
     int n = 0;
-    for (size_t y = 0; y < kMapHeight; ++y) {
+    for (int y = 0; y < kMapHeight; ++y) {
       Tile t = get_tile(x, y);
       if (t == Tile::Cave) {
         set_tile(x, y, Tile::Air);
@@ -56,18 +56,18 @@ Planet::Planet() : sprites_("terrain.png", 18, 8, 8) {
 int Planet::Tile::sprite() const {
   switch (value_) {
     case Planet::Tile::Air:
-      return 108;
+      return 16;
     case Planet::Tile::Cave:
-      return 109;
+      return 13;
     case Planet::Tile::Rock:
-      return 110;
+      return 10;
     default:
       return 0;
   }
 }
 
 void Planet::draw(Graphics& graphics, int xo, int yo) const {
-  if (xo < 0) xo += pixel_width();
+  while (xo < 0) xo += pixel_width();
 
   int ty = std::floor(yo / kTileSize);
   int gy = -(yo % kTileSize);
@@ -85,26 +85,26 @@ void Planet::draw(Graphics& graphics, int xo, int yo) const {
 }
 
 void Planet::smooth_caves() {
-  std::vector<size_t> rocks;
-  std::vector<size_t> caves;
+  std::vector<int> rocks;
+  std::vector<int> caves;
 
-  for (size_t y = 0; y < kMapHeight - 1; ++y) {
-    for (size_t x = 0; x < kMapWidth; ++x) {
+  for (int y = 0; y < kMapHeight - 1; ++y) {
+    for (int x = 0; x < kMapWidth; ++x) {
       const Tile t = get_tile(x, y);
       if (t == Tile::Cave || t == Tile::Rock) {
         if (nearby(x, y, Tile::Rock) >= 6) {
-          rocks.push_back(x + kMapWidth * y);
+          rocks.push_back(index(x, y));
         } else {
-          caves.push_back(x + kMapWidth * y);
+          caves.push_back(index(x, y));
         }
       }
     }
   }
 
-  for (size_t i : rocks) {
+  for (int i : rocks) {
     tiles_[i] = Tile::Rock;
   }
-  for (size_t i : caves) {
+  for (int i : caves) {
     tiles_[i] = Tile::Cave;
   }
 }
@@ -121,25 +121,36 @@ int Planet::nearby(int x, int y, Tile t, int dist) const {
 }
 
 void Planet::set_tile(int x, int y, Tile t) {
-  assert(x >= 0 && x < (int)kMapWidth);
-  assert(y >= 0 && y < (int)kMapHeight);
-  tiles_[x + kMapWidth * y] = t;
+  assert(x >= 0 && x < kMapWidth);
+  assert(y >= 0 && y < kMapHeight);
+  tiles_[index(x, y)] = t;
+}
+
+Planet::Tile Planet::tile(double x, double y) const {
+  return get_tile((int)std::floor(x / (double)kTileSize), (int)std::floor(y / (double)kTileSize));
+}
+
+int Planet::index(int x, int y) const {
+  while (x < 0) x += kMapWidth;
+  return (x % kMapWidth) + kMapWidth * y;
 }
 
 Planet::Tile Planet::get_tile(int x, int y) const {
-  if (y < 0 || y >= (int)kMapHeight) return Tile(Tile::OOB, x % kMapWidth, y);
-  return Tile(tiles_[(x % kMapWidth) + kMapWidth * y], x % kMapWidth, y);
+  if (y < 0) return Tile(Tile::Air, x, y);
+  if (y >= kMapHeight) return Tile(Tile::Rock, x, y);
+
+  return Tile(tiles_[index(x, y)], x, y);
 }
 
 Planet::Tile Planet::collision(Rect box, double dx, double dy) const {
   assert(dx == 0 || dy == 0);
 
   if (dx != 0) {
-    const int x = (int) std::floor((dx < 0 ? box.left : box.right) / kTileSize);
-    return check_tiles(x, x + dx, (int) box.top / kTileSize, (int) box.bottom / kTileSize);
+    const double x = dx + (dx < 0 ? box.left : box.right);
+    return check_tiles(x, x, box.top, box.bottom);
   } else if (dy != 0) {
-    const int y = (int) std::floor(((dy < 0 ? box.top : box.bottom)) / kTileSize);
-    return check_tiles((int) box.left / kTileSize, (int) box.right / kTileSize, y, y + dy);
+    const int y = dy + (dy < 0 ? box.top : box.bottom);
+    return check_tiles(box.left, box.right, y, y);
   } else {
     return Tile::Air;
   }
@@ -157,12 +168,13 @@ bool Planet::wall(int x, int y) const {
 }
 
 Planet::Tile Planet::check_tiles(int x1, int x2, int y1, int y2) const {
-  const int dy = y1 < y2 ? 1 : -1;
-  const int dx = x1 < x2 ? 1 : -1;
+  assert(y1 == y2 || x1 == x2);
+  assert(x1 <= x2);
+  assert(y1 <= y2);
 
-  for (int y = y1; y <= y2; y += dy) {
-    for (int x = x1; x <= x2; x += dx) {
-      const Tile t = get_tile(x, y);
+  for (int y = std::floor(y1); y <= std::ceil(y2); ++y) {
+    for (int x = std::floor(x1); x <= std::ceil(x2); ++x) {
+      const Tile t = tile(x, y);
       if (t.obstructs()) return t;
     }
   }

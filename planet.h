@@ -24,7 +24,7 @@ class Planet {
         explicit operator bool() = delete;
 
         Rect rect() const {
-          return Rect(x_ * (double)kTileSize, y_ * (double)kTileSize, (x_ + 1) * (double)kTileSize, (y_ + 1) * (double)kTileSize);
+          return Rect(x_ * kTileSize, y_ * kTileSize, (x_ + 1) * kTileSize, (y_ + 1) * kTileSize);
         }
 
         bool obstructs() const { return value_ == Rock || value_ == OOB; }
@@ -39,30 +39,32 @@ class Planet {
 
     void draw(Graphics& graphics, int xo, int yo) const;
 
-    size_t pixel_width() const { return kMapWidth * kTileSize; }
-    size_t pixel_height() const { return kMapHeight * kTileSize; }
+    Tile tile(double x, double y) const;
+    int pixel_width() const { return kMapWidth * kTileSize; }
+    int pixel_height() const { return kMapHeight * kTileSize; }
 
-    Tile get_tile(int x, int y) const;
     Tile collision(Rect box, double dx, double dy) const;
 
   private:
 
-    static constexpr size_t kMapHeight = 256;
-    static constexpr size_t kMapWidth = 1024;
-    static constexpr size_t kTileSize = 8;
+    static constexpr int kMapHeight = 256;
+    static constexpr int kMapWidth = 1024;
+    static constexpr int kTileSize = 16;
 
     SpriteMap sprites_;
     std::mt19937 rand_;
     std::array<Tile, kMapHeight * kMapWidth> tiles_;
 
     void set_tile(int x, int y, Tile t);
+    int index(int x, int y) const;
+    Tile get_tile(int x, int y) const;
     Tile check_tiles(int x1, int x2, int y1, int y2) const;
 
     bool wall(int x, int y) const;
     int nearby(int x, int y, Tile t, int dist = 1) const;
     void smooth_caves();
 
-    float surface_x(size_t x) const { return x / 128.0f; }
-    float cave_x(size_t x) const { return x / 64.0f; }
-    float cave_y(size_t y) const { return y / 16.0f; }
+    float surface_x(int x) const { return x / 128.0f; }
+    float cave_x(int x) const { return x / 64.0f; }
+    float cave_y(int y) const { return y / 16.0f; }
 };
