@@ -21,19 +21,19 @@ bool Character::collision(const Rect& other) const {
   return hitbox().intersect(other);
 }
 
-void Character::bounceh(const Rect& box, double bounce) {
+void Character::bounceh(const Rect& box) {
   x_ = vx_ > 0 ? box.left - width_ / 2 : box.right + width_ / 2;
-  vx_ *= -bounce;
+  vx_ = 0;
 }
 
-void Character::bouncev(const Rect& box, double bounce) {
+void Character::bouncev(const Rect& box) {
   if (vy_ > 0) {
     y_ = box.top;
     grounded_ = true;
   } else {
     y_ = box.bottom + height_;
   }
-  vy_ *= -bounce;
+  vy_ = 0;
 }
 
 void Character::set_position(double x, double y) {

@@ -56,7 +56,7 @@ void Player::updatex(const Planet& map, unsigned int elapsed) {
 #ifndef NDEBUG
     xcol_ = tile.rect();
 #endif
-    bounceh(tile.rect(), 0);
+    bounceh(tile.rect());
   } else {
     x_ += vx_ * elapsed;
   }
@@ -73,7 +73,7 @@ void Player::updatey(const Planet& map, unsigned int elapsed) {
 #ifndef NDEBUG
     ycol_ = tile.rect();
 #endif
-    bouncev(tile.rect(), 0);
+    bouncev(tile.rect());
   } else {
     y_ += vy_ * elapsed;
   }

@@ -41,6 +41,6 @@ class Character {
     virtual int drawy() const { return y_ - height_; }
     virtual int sprite() const = 0;
 
-    void bounceh(const Rect& box, double bounce);
-    void bouncev(const Rect& box, double bounce);
+    void bounceh(const Rect& box);
+    void bouncev(const Rect& box);
 };
