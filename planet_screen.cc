@@ -1,11 +1,15 @@
 #include "planet_screen.h"
 
+#include <algorithm>
+
 PlanetScreen::PlanetScreen() : text_("text.png"), planet_(), camera_(), astronaut_() {
-  astronaut_.set_position(128, 128);
+  astronaut_.set_position(0, -100);
   camera_.snap(astronaut_, planet_);
 }
 
 bool PlanetScreen::update(const Input& input, Audio&, unsigned int elapsed) {
+  elapsed = std::min(64u, elapsed);
+
   if (input.key_held(Input::Button::Left)) {
     astronaut_.move_left();
   } else if (input.key_held(Input::Button::Right)) {

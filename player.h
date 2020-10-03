@@ -18,7 +18,7 @@ class Player : public Character {
   private:
 
     static constexpr double kGravity = 0.0005;
-    static constexpr double kJumpSpeed = 0.5;
+    static constexpr double kJumpSpeed = 0.3;
     static constexpr double kAccel = 0.002;
     static constexpr double kDampen = 0.75;
 
@@ -27,6 +27,7 @@ class Player : public Character {
     static constexpr int kHeight = 32;
 
     double ax_;
+    int timer_;
 
 #ifndef NDEBUG
     Rect xcol_, ycol_;
@@ -38,4 +39,7 @@ class Player : public Character {
     Rect boxh() const;
     Rect boxv() const;
     int sprite() const override;
+
+    bool walking() const { return grounded() && ax_ != 0; }
+    bool jumping() const { return vy_ < -0.05; }
 };
