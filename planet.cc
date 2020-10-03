@@ -11,8 +11,6 @@ Planet::Planet() : sprites_("terrain.png", 9, 16, 16) {
   std::random_device d;
   rand_.seed(d());
 
-  rand_.seed(8675309);
-
   std::uniform_int_distribution<int> rs(0, 255);
   const int seed = rs(rand_);
 
