@@ -21,6 +21,7 @@ Planet::Planet() : sprites_("terrain.png", 9, 16, 16) {
       if ((int)y > surface_height) {
         float cave = stb_perlin_ridge_noise3(cave_x(x), cave_y(y), seed, 4.0f, 0.5f, 1.0f, 4);
         float threshold = 0.65 - 0.1 * (y - surface_height) / (float)(kMapHeight - surface_height);
+
         if (cave > threshold) {
           set_tile(x, y, Tile::Cave);
         } else {
@@ -52,13 +53,13 @@ Planet::Planet() : sprites_("terrain.png", 9, 16, 16) {
 }
 
 int Planet::Tile::sprite() const {
-  switch (value_) {
+  switch (value) {
     case Planet::Tile::Air:
-      return 16;
+      return 0;
     case Planet::Tile::Cave:
-      return 13;
+      return 18 + variety;
     case Planet::Tile::Rock:
-      return 10;
+      return 9 + variety;
     default:
       return 0;
   }
@@ -100,28 +101,30 @@ void Planet::smooth_caves() {
   }
 
   for (int i : rocks) {
-    tiles_[i] = Tile::Rock;
+    tiles_[i].value = Tile::Rock;
   }
   for (int i : caves) {
-    tiles_[i] = Tile::Cave;
+    tiles_[i].value = Tile::Cave;
   }
 }
 
-int Planet::nearby(int x, int y, Tile t, int dist) const {
+int Planet::nearby(int x, int y, Tile::Value v, int dist) const {
   int count = 0;
 
   for (int ix = x - dist; ix <= x + dist; ++ix) {
     for (int iy = y - dist; iy <= y + dist; ++iy) {
-      if (get_tile(ix, iy) == t) ++count;
+      if (get_tile(ix, iy) == v) ++count;
     }
   }
   return count;
 }
 
-void Planet::set_tile(int x, int y, Tile t) {
+void Planet::set_tile(int x, int y, Tile::Value v) {
   assert(x >= 0 && x < kMapWidth);
   assert(y >= 0 && y < kMapHeight);
-  tiles_[index(x, y)] = t;
+  std::uniform_int_distribution<int> flavor(0, 3);
+
+  tiles_[index(x, y)] = Tile(v, x, y, flavor(rand_));
 }
 
 Planet::Tile Planet::tile(double x, double y) const {
@@ -137,7 +140,9 @@ Planet::Tile Planet::get_tile(int x, int y) const {
   if (y < 0) return Tile(Tile::Air, x, y);
   if (y >= kMapHeight) return Tile(Tile::Rock, x, y);
 
-  return Tile(tiles_[index(x, y)], x, y);
+  Tile t = tiles_[index(x, y)];
+  t.x = x;
+  return t;
 }
 
 Planet::Tile Planet::collision(Rect box, double dx, double dy) const {
