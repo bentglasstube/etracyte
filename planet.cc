@@ -2,11 +2,12 @@
 
 #include <assert.h>
 #include <algorithm>
+#include <iostream>
 
 #define STB_PERLIN_IMPLEMENTATION
 #include "stb_perlin.h"
 
-Planet::Planet() {
+Planet::Planet() : sprites_("terrain.png", 18, 8, 8) {
   std::random_device d;
   rand_.seed(d());
 
@@ -52,24 +53,34 @@ Planet::Planet() {
   }
 }
 
+inline int sprite_for_tile(Planet::Tile t) {
+  switch (t) {
+    case Planet::Tile::Air:
+      return 0;
+    case Planet::Tile::Cave:
+      return 1;
+    case Planet::Tile::Rock:
+      return 2;
+    default:
+      return 0;
+  }
+}
+
 void Planet::draw(Graphics& graphics, int xo, int yo) const {
-  for (int x = 0; x < graphics.width(); ++x) {
-    for (int y = 0; y < graphics.height(); ++y) {
-      switch (get_tile(x - xo, y - yo)) {
-        case Tile::Air:
-          graphics.draw_pixel({x, y}, 0x0000ffff);
-          break;
-        case Tile::Rock:
-          graphics.draw_pixel({x, y}, 0x884400ff);
-          break;
-        case Tile::Cave:
-          graphics.draw_pixel({x, y}, 0x221100ff);
-          break;
-        default:
-          graphics.draw_pixel({x, y}, 0x000000ff);
-          break;
-      }
+  if (xo < 0) xo += pixel_width();
+
+  int ty = std::floor(yo / kTileSize);
+  int gy = -(yo % kTileSize);
+  while (gy < graphics.height()) {
+    int tx = std::floor(xo / kTileSize);
+    int gx = -(xo % kTileSize);
+    while (gx < graphics.width()) {
+      sprites_.draw(graphics, sprite_for_tile(get_tile(tx, ty)), gx, gy);
+      ++tx;
+      gx += kTileSize;
     }
+    ++ty;
+    gy += kTileSize;
   }
 }
 

@@ -29,6 +29,7 @@ cc_library(
         "@libgam//:screen",
         "@libgam//:spritemap",
         "@libgam//:text",
+        ":camera",
         ":planet",
     ],
 )
@@ -42,6 +43,16 @@ cc_library(
     ],
     deps = [
         "@libgam//:graphics",
+        "@libgam//:spritemap",
+    ],
+)
+
+cc_library(
+    name = "camera",
+    srcs = ["camera.cc"],
+    hdrs = ["camera.h"],
+    deps = [
+        ":planet",
     ],
 )
 

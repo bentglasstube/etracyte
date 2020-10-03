@@ -3,6 +3,7 @@
 #include "screen.h"
 #include "text.h"
 
+#include "camera.h"
 #include "planet.h"
 
 class PlanetScreen : public Screen {
@@ -19,6 +20,8 @@ class PlanetScreen : public Screen {
 
     Text text_;
     Planet planet_;
-    int xo_, yo_;
+    Camera camera_;
+
+    double fx_, fy_;
     bool scroll_;
 };

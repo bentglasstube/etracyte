@@ -4,6 +4,7 @@
 #include <random>
 
 #include "graphics.h"
+#include "spritemap.h"
 
 class Planet {
   public:
@@ -14,11 +15,16 @@ class Planet {
 
     void draw(Graphics& graphics, int xo, int yo) const;
 
+    size_t pixel_width() const { return kMapWidth * kTileSize; }
+    size_t pixel_height() const { return kMapHeight * kTileSize; }
+
   private:
 
     static constexpr size_t kMapHeight = 256;
     static constexpr size_t kMapWidth = 1024;
+    static constexpr size_t kTileSize = 8;
 
+    SpriteMap sprites_;
     std::mt19937 rand_;
     std::array<Tile, kMapHeight * kMapWidth> tiles_;
 
