@@ -24,4 +24,12 @@ class Planet {
 
     void set_tile(int x, int y, Tile t);
     Tile get_tile(int x, int y) const;
+
+    bool wall(int x, int y) const;
+    int nearby(int x, int y, Tile t, int dist = 1) const;
+    void smooth_caves();
+
+    float surface_x(size_t x) const { return x / 128.0f; }
+    float cave_x(size_t x) const { return x / 64.0f; }
+    float cave_y(size_t y) const { return y / 16.0f; }
 };

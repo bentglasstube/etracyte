@@ -1,6 +1,6 @@
 #include "planet_screen.h"
 
-PlanetScreen::PlanetScreen() : text_("text.png") {}
+PlanetScreen::PlanetScreen() : text_("text.png"), planet_(), xo_(128), yo_(0), scroll_(false) {}
 
 bool PlanetScreen::update(const Input& input, Audio&, unsigned int) {
   if (input.key_held(Input::Button::Up)) ++yo_;
