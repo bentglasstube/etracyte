@@ -27,6 +27,7 @@ class Player : public Character {
     static constexpr int kHeight = 32;
 
     double ax_;
+    int timer_;
 
 #ifndef NDEBUG
     Rect xcol_, ycol_;
@@ -38,4 +39,7 @@ class Player : public Character {
     Rect boxh() const;
     Rect boxv() const;
     int sprite() const override;
+
+    bool walking() const { return grounded() && ax_ != 0; }
+    bool jumping() const { return vy_ < -0.05; }
 };

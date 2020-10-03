@@ -3,7 +3,7 @@
 #include <algorithm>
 
 PlanetScreen::PlanetScreen() : text_("text.png"), planet_(), camera_(), astronaut_() {
-  astronaut_.set_position(0, 1088);
+  astronaut_.set_position(0, -100);
   camera_.snap(astronaut_, planet_);
 }
 

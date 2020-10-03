@@ -37,8 +37,7 @@ void Player::stop() {
 }
 
 void Player::jump() {
-  // if (grounded())
-    vy_ = -kJumpSpeed;
+  vy_ = -kJumpSpeed;
 }
 
 void Player::updatex(const Planet& map, unsigned int elapsed) {
@@ -52,6 +51,8 @@ void Player::updatex(const Planet& map, unsigned int elapsed) {
   } else {
     x_ += vx_ * elapsed;
   }
+
+  if (vx_ != 0) timer_ += elapsed;
 }
 
 void Player::updatey(const Planet& map, unsigned int elapsed) {
@@ -78,6 +79,8 @@ Rect Player::boxv() const {
 }
 
 int Player::sprite() const {
-  // TODO animate
-  return 0;
+  if (jumping()) return 4;
+  if (walking()) return (timer_ / 128) % 4;
+
+  return grounded() ? 0 : 3;
 }

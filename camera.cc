@@ -12,13 +12,12 @@ void Camera::update(const Player& focus, const Planet& map, unsigned int elapsed
   const double max = kMaxSpeed * elapsed;
 
   xo_ = clamp(focus.x() - kWidth / 2, xo_ - max, xo_ + max);
-
   yo_ = clamp(focus.y() - kHeight / 2, yo_ - max, yo_ + max);
   yo_ = clamp(yo_, 0.0, (double)(map.pixel_height() - kHeight));
 }
 
 void Camera::snap(const Player& focus, const Planet& map) {
-  xo_ = focus.x() - kWidth;
-  yo_ = focus.y() - kHeight;
+  xo_ = focus.x() - kWidth / 2;
+  yo_ = focus.y() - kHeight / 2;
   yo_ = clamp(yo_, 0.0, (double)(map.pixel_height() - kHeight));
 }
