@@ -3,9 +3,14 @@
 #include <algorithm>
 #include <iostream>
 
+#include "ship_screen.h"
+
 PlanetScreen::PlanetScreen() :
-  text_("text-tiny.png", 8, 8), hud_("ui.png", 4, 8, 8),
-  planet_(), camera_(), astronaut_(), crystals_(0), fuel_(10)
+  text_("text-tiny.png", 8, 8),
+  hud_("ui.png", 4, 8, 8),
+  alerts_("alerts.png", 1, 240, 112),
+  planet_(), camera_(), astronaut_(), state_(State::Playing),
+  crystals_(0), fuel_(10)
 {
   astronaut_.set_position(planet_.pixel_width() / 2, -100);
   camera_.snap(astronaut_, planet_);
@@ -18,50 +23,102 @@ PlanetScreen::PlanetScreen() :
 bool PlanetScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
   elapsed = std::min(64u, elapsed);
 
-  if (input.key_held(Input::Button::Down)) {
-    astronaut_.duck();
-  } else {
-    astronaut_.stand();
-  }
+  if (state_ == State::Playing) {
 
-  if (input.key_held(Input::Button::Left)) {
-    astronaut_.move_left();
-  } else if (input.key_held(Input::Button::Right)) {
-    astronaut_.move_right();
-  } else {
-    astronaut_.stop();
-  }
-
-  if (input.key_pressed(Input::Button::A)) {
-    if (astronaut_.grounded()) {
-      astronaut_.jump();
-    } else if (fuel_ > 0) {
-      --fuel_;
-      audio.play_random_sample("jetpack.wav", 8);
-      astronaut_.jump();
+    if (input.key_held(Input::Button::Down)) {
+      astronaut_.duck();
     } else {
-      audio.play_random_sample("nope.wav", 8);
+      astronaut_.stand();
     }
+
+    if (input.key_held(Input::Button::Left)) {
+      astronaut_.move_left();
+    } else if (input.key_held(Input::Button::Right)) {
+      astronaut_.move_right();
+    } else {
+      astronaut_.stop();
+    }
+
+    if (input.key_pressed(Input::Button::A)) {
+      if (astronaut_.grounded()) {
+        astronaut_.jump();
+      } else if (fuel_ > 0) {
+        --fuel_;
+        audio.play_random_sample("jetpack.wav", 8);
+        astronaut_.jump();
+      } else {
+        audio.play_random_sample("nope.wav", 8);
+      }
+    }
+
+    if (input.key_pressed(Input::Button::Start)) {
+      audio.play_random_sample("beep.wav", 8);
+      state_ = State::Paused;
+      timer_ = 0;
+      choice_ = 0;
+    }
+
+    const Item& item = planet_.take_item(astronaut_.x(), astronaut_.y());
+    switch (item.type()) {
+      case Item::Type::Crystal:
+        audio.play_random_sample("crystal.wav", 2);
+        crystals_++;
+        break;
+
+      default:
+        // do nothing
+        break;
+    }
+
+    for (auto& enemy : enemies_) {
+      enemy.update(audio, planet_, astronaut_, elapsed);
+    }
+
+    astronaut_.update(planet_, audio, elapsed);
+    camera_.update(astronaut_, planet_, elapsed);
+
+  } else if (state_ == State::Paused) {
+
+    timer_ += elapsed;
+
+    if (input.key_pressed(Input::Button::Start)) {
+      if (choice_ == 1) {
+        if (crystals_ >= 1) {
+          state_ = State::Returning;
+          audio.play_random_sample("beep.wav", 8);
+          audio.play_sample("teleport.wav");
+        } else {
+          audio.play_random_sample("nope.wav", 8);
+          // TODO show message about required crystals
+          state_ = State::Playing;
+        }
+      } else {
+        audio.play_random_sample("beep.wav", 8);
+        state_ = State::Playing;
+      }
+    }
+
+    if (input.key_pressed(Input::Button::Up)) {
+      if (choice_ > 0) {
+        --choice_;
+        audio.play_random_sample("beep.wav", 8);
+      }
+    }
+
+    if (input.key_pressed(Input::Button::Down)) {
+      if (choice_ < 1) {
+        ++choice_;
+        audio.play_random_sample("beep.wav", 8);
+      }
+    }
+
+  } else if (state_ == State::Returning) {
+    for (auto& enemy : enemies_) {
+      enemy.update(audio, planet_, astronaut_, elapsed);
+    }
+    timer_ += elapsed;
+    if (timer_ > 12000) return false;
   }
-
-  const Item& item = planet_.take_item(astronaut_.x(), astronaut_.y());
-  switch (item.type()) {
-    case Item::Type::Crystal:
-      audio.play_random_sample("crystal.wav", 2);
-      crystals_++;
-      break;
-
-    default:
-      // do nothing
-      break;
-  }
-
-  for (auto& enemy : enemies_) {
-    enemy.update(audio, planet_, astronaut_, elapsed);
-  }
-
-  astronaut_.update(planet_, audio, elapsed);
-  camera_.update(astronaut_, planet_, elapsed);
 
   return true;
 }
@@ -81,6 +138,29 @@ void PlanetScreen::draw(Graphics& graphics) const {
     enemy.draw(graphics, xo - pw, yo);
   }
 
+  if (state_ == State::Paused) {
+    graphics.draw_rect({0, 0}, {graphics.width(), graphics.height()}, 0x00000055, true);
+    const int y = std::max(graphics.height() - timer_, 304);
+
+    alerts_.draw(graphics, 2, 136, y);
+    text_.draw(graphics, "Explore", 192, y + 24);
+    text_.draw(graphics, "Return to ship", 192, y + 32);
+    text_.draw(graphics, ">", 184, y + 24 + 8 * choice_);
+  }
+
+  if (state_ == State::Returning) {
+    const int beam = std::min(255, 255 * timer_ / 11000);
+    const Rect a = astronaut_.hitbox();
+    const Graphics::Point p1 = {(int)a.left - xo, 0};
+    const Graphics::Point p2 = {(int)a.right - xo, (int)a.bottom - yo};
+    graphics.draw_rect(p1, p2, 0xffcc3300 | beam, true);
+
+    if (timer_ > 11000) {
+      const int fade = 255 * (timer_ - 11000) / 1000;
+      graphics.draw_rect({0, 0}, {graphics.width(), graphics.height()}, 0xffffff00 | fade, true);
+    }
+  }
+
   graphics.draw_rect({6, 6}, {6 + 2 * fuel_, 10}, 0xd8ff00ff, true);
   hud_.draw(graphics, 0, 4, 4);
   hud_.draw(graphics, 1, 12, 4);
@@ -92,7 +172,7 @@ void PlanetScreen::draw(Graphics& graphics) const {
 }
 
 Screen* PlanetScreen::next_screen() const {
-  return nullptr;
+  return new ShipScreen();
 }
 
 void PlanetScreen::spawn_enemy() {

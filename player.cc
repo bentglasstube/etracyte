@@ -95,3 +95,7 @@ int Player::sprite() const {
 
   return grounded() ? 0 : 3;
 }
+
+Rect Player::hitbox() const {
+  return Rect(x_ - kHalfWidth, y_ - kHeight + (jumping() || ducking() ? 4 : 0), x_ + kHalfWidth, y_);
+}
