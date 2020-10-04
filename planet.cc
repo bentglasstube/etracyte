@@ -8,18 +8,18 @@
 #include "stb_perlin.h"
 
 Planet::Planet() : sprites_("terrain.png", 9, 16, 16) {
-  std::random_device d;
-  rand_.seed(d());
+  std::random_device dev;
+  rand_.seed(dev());
 
-  std::uniform_int_distribution<int> rs(0, 255);
-  const int seed = rs(rand_);
+  std::uniform_real_distribution<double> rns(0.0, 1.0);
+  const double noise_seed = rns(rand_);
 
   for (int x = 0; x < kMapWidth; ++x) {
-    int surface_height = 64 + (int)(64 * stb_perlin_turbulence_noise3(surface_x(x), 0, seed, 2.0f, 0.5f, 6));
+    int surface_height = 64 + (int)(64 * stb_perlin_turbulence_noise3(surface_x(x), 0, noise_seed, 2.0f, 0.5f, 6));
 
     for (int y = 0; y < kMapHeight - 1; ++y) {
       if ((int)y > surface_height) {
-        float cave = stb_perlin_ridge_noise3(cave_x(x), cave_y(y), seed, 4.0f, 0.5f, 1.0f, 4);
+        float cave = stb_perlin_ridge_noise3(cave_x(x), cave_y(y), noise_seed, 4.0f, 0.5f, 1.0f, 4);
         float threshold = 0.65 - 0.1 * (y - surface_height) / (float)(kMapHeight - surface_height);
 
         if (cave > threshold) {
