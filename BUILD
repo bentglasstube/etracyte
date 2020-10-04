@@ -18,14 +18,17 @@ cc_binary(
 cc_library(
     name = "screens",
     srcs = [
-        "title_screen.cc",
         "planet_screen.cc",
+        "ship_screen.cc",
+        "title_screen.cc",
     ],
     hdrs = [
-        "title_screen.h",
         "planet_screen.h",
+        "ship_screen.h",
+        "title_screen.h",
     ],
     deps = [
+        "@libgam//:backdrop",
         "@libgam//:screen",
         "@libgam//:spritemap",
         "@libgam//:text",
