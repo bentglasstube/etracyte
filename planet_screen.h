@@ -8,6 +8,7 @@
 
 #include "camera.h"
 #include "enemy.h"
+#include "game_state.h"
 #include "planet.h"
 #include "player.h"
 
@@ -16,7 +17,7 @@ class PlanetScreen : public Screen {
 
     enum class State { Playing, Paused, Returning };
 
-    PlanetScreen();
+    PlanetScreen(GameState gs);
 
     bool update(const Input&, Audio&, unsigned int) override;
     void draw(Graphics& graphics) const override;
@@ -27,6 +28,7 @@ class PlanetScreen : public Screen {
 
     static constexpr int kEnemies = 2000;
 
+    GameState gs_;
     Text text_;
     SpriteMap hud_, alerts_;
     Planet planet_;

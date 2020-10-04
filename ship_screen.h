@@ -9,11 +9,12 @@
 #include "text.h"
 
 #include "appearing_text.h"
+#include "game_state.h"
 
 class ShipScreen : public Screen {
   public:
 
-    ShipScreen();
+    ShipScreen(GameState s);
 
     enum class State { Zooming, Warning, Lore, Descend };
 
@@ -38,9 +39,10 @@ class ShipScreen : public Screen {
       Graphics::Color color;
     };
 
+    GameState gs_;
     Backdrop bridge_;
-    SpriteMap alerts_;
     Text text_;
+    SpriteMap alerts_;
     State state_;
 
     double stretch_;

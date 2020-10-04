@@ -1,14 +1,20 @@
 #include "title_screen.h"
 
-#include "ship_screen.h"
+#include "game_state.h"
 #include "planet_screen.h"
+#include "ship_screen.h"
 
 TitleScreen::TitleScreen() : title_("title.png"),text_("text-white.png"), blink_timer_(0) {}
 
 bool TitleScreen::update(const Input& input, Audio&, unsigned int elapsed) {
   blink_timer_ = (blink_timer_ + elapsed) % 1000;
 
-  return !input.any_pressed();
+  if (input.key_pressed(Input::Button::Start) || input.key_pressed(Input::Button::A)) {
+    skip_ = input.key_held(Input::Button::Select);
+    return false;
+  }
+
+  return true;
 }
 
 void TitleScreen::draw(Graphics& graphics) const {
@@ -19,5 +25,7 @@ void TitleScreen::draw(Graphics& graphics) const {
 }
 
 Screen* TitleScreen::next_screen() const {
-  return new PlanetScreen();
+  GameState gs;
+  if (skip_) return new PlanetScreen(gs);
+  return new ShipScreen(gs);
 }

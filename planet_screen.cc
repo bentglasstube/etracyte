@@ -5,7 +5,8 @@
 
 #include "ship_screen.h"
 
-PlanetScreen::PlanetScreen() :
+PlanetScreen::PlanetScreen(GameState gs) :
+  gs_(gs),
   text_("text-tiny.png", 8, 8),
   hud_("ui.png", 4, 8, 8),
   alerts_("alerts.png", 1, 240, 112),
@@ -172,7 +173,7 @@ void PlanetScreen::draw(Graphics& graphics) const {
 }
 
 Screen* PlanetScreen::next_screen() const {
-  return new ShipScreen();
+  return new ShipScreen(gs_);
 }
 
 void PlanetScreen::spawn_enemy() {

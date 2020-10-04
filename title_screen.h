@@ -18,5 +18,6 @@ class TitleScreen : public Screen {
 
     Backdrop title_;
     Text text_;
+    bool skip_;
     unsigned int blink_timer_;
 };

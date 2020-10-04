@@ -5,8 +5,9 @@
 
 #include "planet_screen.h"
 
-ShipScreen::ShipScreen() :
-  bridge_("bridge.png"), alerts_("alerts.png", 1, 240, 112), text_("text-amber.png"),
+ShipScreen::ShipScreen(GameState gs) :
+  gs_(gs), bridge_("bridge.png"), text_("text-amber.png"),
+  alerts_("alerts.png", 1, 240, 112),
   state_(State::Zooming), stretch_(1000.0), timer_(0)
 {
   std::random_device dev;
@@ -120,5 +121,5 @@ void ShipScreen::transition(State state) {
 }
 
 Screen* ShipScreen::next_screen() const {
-  return new PlanetScreen();
+  return new PlanetScreen(gs_);
 }

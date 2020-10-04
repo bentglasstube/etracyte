@@ -23,6 +23,7 @@ cc_library(
         "title_screen.cc",
     ],
     hdrs = [
+        "game_state.h",
         "planet_screen.h",
         "ship_screen.h",
         "title_screen.h",
