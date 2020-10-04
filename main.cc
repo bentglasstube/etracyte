@@ -5,7 +5,7 @@
 int main(int, char**) {
   Game::Config config;
 
-  config.graphics.title = "Ludum Dare 47";
+  config.graphics.title = "Etracyte";
   config.graphics.width = 512;
   config.graphics.height = 448;
   config.graphics.scale = 2;

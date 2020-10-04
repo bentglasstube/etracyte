@@ -1,7 +1,7 @@
 package(default_visibility = ["//visibility:public"])
 
 cc_binary(
-    name = "ld47",
+    name = "etracyte",
     data = ["//content"],
     linkopts = [
         "-lSDL2",
