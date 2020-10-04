@@ -126,7 +126,7 @@ bool PlanetScreen::update(const Input& input, Audio& audio, unsigned int elapsed
       enemy.update(audio, planet_, astronaut_, elapsed);
     }
     warp_timer_ += elapsed;
-    if (warp_timer_ > 12000) {
+    if (warp_timer_ > 9000) {
       gs_.crystals += crystals_;
       ++gs_.planets;
 
@@ -163,14 +163,14 @@ void PlanetScreen::draw(Graphics& graphics) const {
   }
 
   if (state_ == State::Returning) {
-    const int beam = std::min(255, 255 * warp_timer_ / 11000);
+    const int beam = std::min(255, 255 * warp_timer_ / 8000);
     const Rect a = astronaut_.hitbox();
     const Graphics::Point p1 = {(int)a.left - xo, 0};
     const Graphics::Point p2 = {(int)a.right - xo, (int)a.bottom - yo};
     graphics.draw_rect(p1, p2, 0xffcc3300 | beam, true);
 
-    if (warp_timer_ > 11000) {
-      const int fade = 255 * (warp_timer_ - 11000) / 1000;
+    if (warp_timer_ > 8000) {
+      const int fade = 255 * (warp_timer_ - 8000) / 1000;
       graphics.draw_rect({0, 0}, {graphics.width(), graphics.height()}, 0xffffff00 | fade, true);
     }
   }

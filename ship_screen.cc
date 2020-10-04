@@ -31,6 +31,7 @@ ShipScreen::ShipScreen(GameState gs) :
 
   if (gs_.planets == 0) {
     transition(State::Hyperspeed);
+    hyperspace_time_ = 3000;
     stretch_ = 1000.0;
   } else {
     transition(State::Preparing);
@@ -54,11 +55,13 @@ bool ShipScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
       if (timer_ > 1000) message_->update(audio, elapsed);
       if (message_->done() && input.any_pressed()) {
         transition(State::Hyperspeed);
+        std::uniform_int_distribution<int> hs(3000, 10000);
+        hyperspace_time_ = hs(rng_);
       }
       break;
 
     case State::Hyperspeed:
-      if (timer_ > 3000) {
+      if (timer_ > hyperspace_time_) {
         if (gs_.planets == 0) {
           transition(State::Warning);
           audio.play_sample("alert.wav");

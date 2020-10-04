@@ -46,7 +46,7 @@ class ShipScreen : public Screen {
     State state_;
 
     double stretch_;
-    int timer_;
+    int timer_, hyperspace_time_;
 
     std::vector<Star> stars_;
     std::unique_ptr<AppearingText> message_;
