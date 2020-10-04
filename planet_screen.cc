@@ -4,7 +4,7 @@
 #include <iostream>
 
 PlanetScreen::PlanetScreen() : text_("text.png"), planet_(), camera_(), astronaut_(), crystals_(0) {
-  astronaut_.set_position(0, -100);
+  astronaut_.set_position(planet_.pixel_width() / 2, -100);
   camera_.snap(astronaut_, planet_);
 
   for (int i = 0; i < kEnemies; ++i) {
@@ -46,7 +46,7 @@ bool PlanetScreen::update(const Input& input, Audio& audio, unsigned int elapsed
   }
 
   for (auto& enemy : enemies_) {
-    enemy.update(planet_, audio, elapsed);
+    enemy.update(planet_, astronaut_, elapsed);
   }
 
   astronaut_.update(planet_, audio, elapsed);
@@ -86,6 +86,6 @@ void PlanetScreen::spawn_enemy() {
 
   if (tile == Planet::Tile::Rock) {
     const auto r = tile.rect();
-    enemies_.emplace_back(Enemy::Type::Bat, (r.left + r.right) / 2.0, r.bottom);
+    enemies_.emplace_back(Enemy::Type::Bat, (r.left + r.right) / 2, r.bottom + 6);
   }
 }

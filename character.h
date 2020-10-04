@@ -20,10 +20,11 @@ class Character {
 
     bool grounded() const { return grounded_; }
 
-    Rect hitbox() const;
+    virtual Rect hitbox() const = 0;
     bool collision(const Rect& other) const;
 
     void set_position(double x, double y);
+    double dist2(const Character& other) const;
 
   protected:
 
@@ -34,10 +35,8 @@ class Character {
     int width_, height_;
     double x_, y_, vx_, vy_;
 
-    int drawx() const { return x_ - width_ / 2; }
-    int drawy() const { return y_ - height_; }
     virtual int sprite() const = 0;
 
-    void bounceh(const Rect& box);
-    void bouncev(const Rect& box);
+    void bounceh(const Rect& box, double bounce = 0.0);
+    void bouncev(const Rect& box, double bounce = 0.0);
 };
