@@ -56,6 +56,8 @@ class Planet {
     int pixel_height() const { return kMapHeight * kTileSize; }
 
     Tile collision(Rect box, double dx, double dy) const;
+    Tile get_random_tile(Tile::Value type); // not const, affects rng
+    Tile get_tile(int x, int y) const;
 
   private:
 
@@ -70,7 +72,6 @@ class Planet {
 
     void set_tile(int x, int y, Tile::Value v);
     int index(int x, int y) const;
-    Tile get_tile(int x, int y) const;
     Tile check_tiles(int x1, int x2, int y1, int y2) const;
 
     bool wall(int x, int y) const;

@@ -232,3 +232,13 @@ Planet::Tile Planet::check_tiles(int x1, int x2, int y1, int y2) const {
   }
   return Tile::Air;
 }
+
+Planet::Tile Planet::get_random_tile(Tile::Value v) {
+  std::uniform_int_distribution<int> xr(0, kMapWidth - 1);
+  std::uniform_int_distribution<int> yr(0, kMapHeight - 1);
+
+  while (true) {
+    const Tile t = get_tile(xr(rand_), yr(rand_));
+    if (t == v) return t;
+  }
+}

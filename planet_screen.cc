@@ -1,10 +1,15 @@
 #include "planet_screen.h"
 
 #include <algorithm>
+#include <iostream>
 
 PlanetScreen::PlanetScreen() : text_("text.png"), planet_(), camera_(), astronaut_(), crystals_(0) {
   astronaut_.set_position(0, -100);
   camera_.snap(astronaut_, planet_);
+
+  for (int i = 0; i < kEnemies; ++i) {
+    spawn_enemy();
+  }
 }
 
 bool PlanetScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
@@ -40,6 +45,9 @@ bool PlanetScreen::update(const Input& input, Audio& audio, unsigned int elapsed
       break;
   }
 
+  for (auto& enemy : enemies_) {
+    enemy.update(planet_, audio, elapsed);
+  }
 
   astronaut_.update(planet_, audio, elapsed);
   camera_.update(astronaut_, planet_, elapsed);
@@ -48,8 +56,19 @@ bool PlanetScreen::update(const Input& input, Audio& audio, unsigned int elapsed
 }
 
 void PlanetScreen::draw(Graphics& graphics) const {
-  planet_.draw(graphics, camera_.xoffset(), camera_.yoffset());
-  astronaut_.draw(graphics, camera_.xoffset(), camera_.yoffset());
+  int xo = camera_.xoffset();
+  const int yo = camera_.yoffset();
+  const int pw = planet_.pixel_width();
+
+  planet_.draw(graphics, xo, yo);
+  astronaut_.draw(graphics, xo, yo);
+
+  while (xo < 0) xo += pw;
+  while (xo >= pw) xo -= pw;
+  for (const auto& enemy : enemies_) {
+    enemy.draw(graphics, xo, yo);
+    enemy.draw(graphics, xo - pw, yo);
+  }
 
   text_.draw(graphics, std::to_string(crystals_), graphics.width(), 0, Text::Alignment::Right);
   text_.draw(graphics, std::to_string((int)astronaut_.x()), 0, 0);
@@ -57,4 +76,16 @@ void PlanetScreen::draw(Graphics& graphics) const {
 
 Screen* PlanetScreen::next_screen() const {
   return nullptr;
+}
+
+void PlanetScreen::spawn_enemy() {
+  auto tile = planet_.get_random_tile(Planet::Tile::Cave);
+  while (tile == Planet::Tile::Cave) {
+    tile = planet_.get_tile(tile.x, tile.y - 1);
+  }
+
+  if (tile == Planet::Tile::Rock) {
+    const auto r = tile.rect();
+    enemies_.emplace_back(Enemy::Type::Bat, (r.left + r.right) / 2.0, r.bottom);
+  }
 }

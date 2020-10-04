@@ -3,7 +3,7 @@
 #include <cassert>
 
 Character::Character(int width, int height) :
-  sprites_("sprites.png", 8, 16, 32),
+  sprites_("sprites.png", 5, 16, 32),
   facing_(Facing::Right),
   grounded_(true),
   width_(width), height_(height),
@@ -11,6 +11,9 @@ Character::Character(int width, int height) :
 
 void Character::draw(Graphics& graphics, int xo, int yo) const {
   sprites_.draw_ex(graphics, sprite(), drawx() - xo, drawy() - yo, facing_ == Facing::Left, 0, 0, 0);
+#ifndef NDEBUG
+  hitbox().draw(graphics, xo, yo, 0x00ffd8ff, false);
+#endif
 }
 
 Rect Character::hitbox() const {
