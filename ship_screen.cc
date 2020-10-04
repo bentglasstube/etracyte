@@ -6,8 +6,8 @@
 #include "planet_screen.h"
 
 ShipScreen::ShipScreen() :
-  bridge_("bridge.png"), text_("text.png"), state_(State::Zooming),
-  stretch_(1000.0), timer_(0)
+  bridge_("bridge.png"), alerts_("alerts.png", 1, 240, 112), text_("text-amber.png"),
+  state_(State::Zooming), stretch_(1000.0), timer_(0)
 {
   std::random_device dev;
   rng_.seed(dev());
@@ -43,13 +43,14 @@ bool ShipScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
       if (timer_ > 3000) {
         transition(State::Warning);
         audio.play_sample("alert.wav");
+        message_.reset(new AppearingText(kAlertText));
       }
       break;
 
     case State::Warning:
-      // TODO show engine warnings
-      if (input.any_pressed()) {
-        transition(State::Lore);
+      if (timer_ > 3824) message_->update(audio, elapsed);
+      if (message_->done() && input.any_pressed()) {
+        transition(State::Descend);
       }
       break;
 
@@ -98,6 +99,10 @@ void ShipScreen::draw(Graphics& graphics) const {
   switch (state_) {
     case State::Warning:
       if ((timer_ % 1223) < 725) full.draw(graphics, 0, 0, 0xff000044, true);
+      if (timer_ > 3824) {
+        alerts_.draw(graphics, 0, 136, 120);
+        message_->draw(graphics, text_, 188, 128);
+      }
       break;
 
     case State::Descend:

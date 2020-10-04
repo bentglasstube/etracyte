@@ -32,6 +32,7 @@ cc_library(
         "@libgam//:screen",
         "@libgam//:spritemap",
         "@libgam//:text",
+        ":appearing_text",
         ":camera",
         ":characters",
         ":planet",
@@ -98,5 +99,15 @@ cc_library(
     deps = [
         "@libgam//:spritemap",
         ":rect",
+    ],
+)
+
+cc_library(
+    name = "appearing_text",
+    srcs = ["appearing_text.cc"],
+    hdrs = ["appearing_text.h"],
+    deps = [
+        "@libgam//:audio",
+        "@libgam//:text",
     ],
 )

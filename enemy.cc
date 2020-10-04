@@ -9,10 +9,13 @@ Enemy::Enemy(Type t, double x, double y) :
   rng_.seed(dev());
 }
 
-void Enemy::update(const Planet& map, const Character& target, unsigned int elapsed) {
+void Enemy::update(Audio& audio, const Planet& map, const Character& target, unsigned int elapsed) {
   switch (state_) {
     case State::Waiting:
-      if (can_see(target)) swoop(map, target);
+      if (can_see(target)) {
+        audio.play_random_sample("bat.wav", 4);
+        swoop(map, target);
+      }
       return;
 
     case State::Attacking:

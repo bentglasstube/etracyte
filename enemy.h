@@ -2,7 +2,10 @@
 
 #include <random>
 
+#include "audio.h"
+
 #include "character.h"
+#include "planet.h"
 
 class Enemy : public Character {
   public:
@@ -12,7 +15,7 @@ class Enemy : public Character {
 
     Enemy(Type t, double x, double y);
 
-    void update(const Planet& map, const Character& target, unsigned int elapsed);
+    void update(Audio& audio, const Planet& map, const Character& target, unsigned int elapsed);
     void draw(Graphics& graphics, int xo, int yo) const;
 
     Rect boxh() const;

@@ -1,8 +1,9 @@
 #include "title_screen.h"
 
 #include "ship_screen.h"
+#include "planet_screen.h"
 
-TitleScreen::TitleScreen() : title_("title.png"),text_("text.png"), blink_timer_(0) {}
+TitleScreen::TitleScreen() : title_("title.png"),text_("text-white.png"), blink_timer_(0) {}
 
 bool TitleScreen::update(const Input& input, Audio&, unsigned int elapsed) {
   blink_timer_ = (blink_timer_ + elapsed) % 1000;
@@ -18,5 +19,5 @@ void TitleScreen::draw(Graphics& graphics) const {
 }
 
 Screen* TitleScreen::next_screen() const {
-  return new ShipScreen();
+  return new PlanetScreen();
 }

@@ -13,7 +13,7 @@ class Player : public Character {
     void move_left();
     void move_right();
     void stop();
-    void jump(Audio& audio);
+    void jump();
     void duck();
     void stand();
 

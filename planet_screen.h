@@ -26,6 +26,7 @@ class PlanetScreen : public Screen {
     static constexpr int kEnemies = 2000;
 
     Text text_;
+    SpriteMap hud_;
     Planet planet_;
     Camera camera_;
     Player astronaut_;
@@ -33,7 +34,7 @@ class PlanetScreen : public Screen {
 
     std::mt19937 rng_;
 
-    int crystals_;
+    int crystals_, fuel_;
 
     void spawn_enemy();
 

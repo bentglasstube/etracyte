@@ -36,8 +36,7 @@ void Player::stop() {
   ax_ = 0;
 }
 
-void Player::jump(Audio& audio) {
-  if (!grounded()) audio.play_random_sample("jetpack.wav", 8);
+void Player::jump() {
   vy_ = -kJumpSpeed;
 }
 

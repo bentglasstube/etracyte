@@ -3,7 +3,10 @@
 #include <algorithm>
 #include <iostream>
 
-PlanetScreen::PlanetScreen() : text_("text.png"), planet_(), camera_(), astronaut_(), crystals_(0) {
+PlanetScreen::PlanetScreen() :
+  text_("text-tiny.png", 8, 8), hud_("ui.png", 4, 8, 8),
+  planet_(), camera_(), astronaut_(), crystals_(0), fuel_(10)
+{
   astronaut_.set_position(planet_.pixel_width() / 2, -100);
   camera_.snap(astronaut_, planet_);
 
@@ -30,7 +33,15 @@ bool PlanetScreen::update(const Input& input, Audio& audio, unsigned int elapsed
   }
 
   if (input.key_pressed(Input::Button::A)) {
-    astronaut_.jump(audio);
+    if (astronaut_.grounded()) {
+      astronaut_.jump();
+    } else if (fuel_ > 0) {
+      --fuel_;
+      audio.play_random_sample("jetpack.wav", 8);
+      astronaut_.jump();
+    } else {
+      audio.play_random_sample("nope.wav", 8);
+    }
   }
 
   const Item& item = planet_.take_item(astronaut_.x(), astronaut_.y());
@@ -46,7 +57,7 @@ bool PlanetScreen::update(const Input& input, Audio& audio, unsigned int elapsed
   }
 
   for (auto& enemy : enemies_) {
-    enemy.update(planet_, astronaut_, elapsed);
+    enemy.update(audio, planet_, astronaut_, elapsed);
   }
 
   astronaut_.update(planet_, audio, elapsed);
@@ -70,8 +81,14 @@ void PlanetScreen::draw(Graphics& graphics) const {
     enemy.draw(graphics, xo - pw, yo);
   }
 
-  text_.draw(graphics, std::to_string(crystals_), graphics.width(), 0, Text::Alignment::Right);
-  text_.draw(graphics, std::to_string((int)astronaut_.x()), 0, 0);
+  graphics.draw_rect({6, 6}, {6 + 2 * fuel_, 10}, 0xd8ff00ff, true);
+  hud_.draw(graphics, 0, 4, 4);
+  hud_.draw(graphics, 1, 12, 4);
+  hud_.draw(graphics, 1, 20, 4);
+  hud_.draw(graphics, 2, 28, 4);
+
+  text_.draw(graphics, std::to_string(crystals_), graphics.width() - 12, 4, Text::Alignment::Right);
+  hud_.draw(graphics, 3, graphics.width() - 12, 4);
 }
 
 Screen* PlanetScreen::next_screen() const {
