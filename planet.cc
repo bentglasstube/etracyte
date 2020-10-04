@@ -79,7 +79,7 @@ Planet::Planet() : sprites_("terrain.png", 9, 16, 16) {
 int Planet::Tile::sprite() const {
   switch (value) {
     case Planet::Tile::Air:
-      return 0;
+      return 0 + variety;
     case Planet::Tile::Cave:
       return 18 + variety;
     case Planet::Tile::Rock:
