@@ -17,7 +17,7 @@ class AppearingText {
 
   private:
 
-    static constexpr int kLetterRate = 75;
+    static constexpr int kLetterRate = 30;
 
     size_t count_;
     std::string text_;
