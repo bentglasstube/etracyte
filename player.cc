@@ -4,9 +4,9 @@
 
 Player::Player() : Character(kWidth, kHeight) {}
 
-void Player::update(const Planet& map, unsigned int elapsed) {
+void Player::update(const Planet& map, Audio& audio, unsigned int elapsed) {
   updatex(map, elapsed);
-  updatey(map, elapsed);
+  updatey(map, audio, elapsed);
 
   vx_ *= kDampen;
 }
@@ -65,7 +65,7 @@ void Player::updatex(const Planet& map, unsigned int elapsed) {
   if (vx_ != 0) timer_ += elapsed;
 }
 
-void Player::updatey(const Planet& map, unsigned int elapsed) {
+void Player::updatey(const Planet& map, Audio& audio, unsigned int elapsed) {
   vy_ += kGravity * elapsed;
   grounded_ = false;
 
@@ -74,6 +74,7 @@ void Player::updatey(const Planet& map, unsigned int elapsed) {
 #ifndef NDEBUG
     ycol_ = tile.rect();
 #endif
+    if (std::abs(vy_) > kBonkForce) audio.play_random_sample("bonk.wav", 8);
     bouncev(tile.rect());
   } else {
     y_ += vy_ * elapsed;

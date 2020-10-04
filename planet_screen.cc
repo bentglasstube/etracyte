@@ -41,7 +41,7 @@ bool PlanetScreen::update(const Input& input, Audio& audio, unsigned int elapsed
   }
 
 
-  astronaut_.update(planet_, elapsed);
+  astronaut_.update(planet_, audio, elapsed);
   camera_.update(astronaut_, planet_, elapsed);
 
   return true;

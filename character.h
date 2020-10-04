@@ -1,5 +1,6 @@
 #pragma once
 
+#include "audio.h"
 #include "spritemap.h"
 
 #include "planet.h"
@@ -12,7 +13,7 @@ class Character {
     Character(int width, int height);
     virtual ~Character() {}
 
-    virtual void update(const Planet& map, unsigned int elapsed) = 0;
+    virtual void update(const Planet& map, Audio& audio, unsigned int elapsed) = 0;
     virtual void draw(Graphics& graphics, int xo, int yo) const;
 
     double x() const { return x_; }

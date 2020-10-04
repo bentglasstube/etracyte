@@ -1,7 +1,5 @@
 #pragma once
 
-#include "audio.h"
-
 #include "character.h"
 
 class Player : public Character {
@@ -9,7 +7,7 @@ class Player : public Character {
 
     Player();
 
-    void update(const Planet& map, unsigned int elapsed) override;
+    void update(const Planet& map, Audio& audio, unsigned int elapsed) override;
     void draw(Graphics& graphics, int xo, int yo) const override;
 
     void move_left();
@@ -28,6 +26,7 @@ class Player : public Character {
     static constexpr double kJumpSpeed = 0.3;
     static constexpr double kAccel = 0.002;
     static constexpr double kDampen = 0.75;
+    static constexpr double kBonkForce = 0.2;
 
     static constexpr int kWidth = 16;
     static constexpr int kHalfWidth = kWidth / 2;
@@ -42,7 +41,7 @@ class Player : public Character {
 #endif
 
     void updatex(const Planet& map, unsigned int elapsed);
-    void updatey(const Planet& map, unsigned int elapsed);
+    void updatey(const Planet& map, Audio& audio, unsigned int elapsed);
 
     Rect boxh() const;
     Rect boxv() const;
