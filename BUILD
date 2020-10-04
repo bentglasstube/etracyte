@@ -79,6 +79,7 @@ cc_library(
         "player.h",
     ],
     deps = [
+        "@libgam//:audio",
         "@libgam//:spritemap",
         ":planet",
         ":rect",

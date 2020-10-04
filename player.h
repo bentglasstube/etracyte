@@ -1,5 +1,7 @@
 #pragma once
 
+#include "audio.h"
+
 #include "character.h"
 
 class Player : public Character {
@@ -13,7 +15,7 @@ class Player : public Character {
     void move_left();
     void move_right();
     void stop();
-    void jump();
+    void jump(Audio& audio);
     void duck();
     void stand();
 

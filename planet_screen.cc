@@ -7,7 +7,7 @@ PlanetScreen::PlanetScreen() : text_("text.png"), planet_(), camera_(), astronau
   camera_.snap(astronaut_, planet_);
 }
 
-bool PlanetScreen::update(const Input& input, Audio&, unsigned int elapsed) {
+bool PlanetScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
   elapsed = std::min(64u, elapsed);
 
   if (input.key_held(Input::Button::Down)) {
@@ -25,12 +25,13 @@ bool PlanetScreen::update(const Input& input, Audio&, unsigned int elapsed) {
   }
 
   if (input.key_pressed(Input::Button::A)) {
-    astronaut_.jump();
+    astronaut_.jump(audio);
   }
 
   const Item& item = planet_.take_item(astronaut_.x(), astronaut_.y());
   switch (item.type()) {
     case Item::Type::Crystal:
+      audio.play_random_sample("crystal.wav", 2);
       crystals_++;
       break;
 
