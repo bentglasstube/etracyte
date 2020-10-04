@@ -7,6 +7,9 @@ Item::Item(Type t, double x, double y, int variety) :
 void Item::draw(Graphics& graphics, int xo, int yo) const {
   const Rect r = rect();
 
+  if (r.left - xo < -32) return;
+  if (r.right - xo > graphics.width() + 32) return;
+
 #ifndef NDEBUG
   if (collecitble()) r.draw(graphics, xo, yo, 0xd8ff00ff, false);
 #endif
