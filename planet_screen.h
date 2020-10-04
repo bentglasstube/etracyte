@@ -36,11 +36,13 @@ class PlanetScreen : public Screen {
     Player astronaut_;
     State state_;
     std::vector<Enemy> enemies_;
+    std::string hint_;
 
     std::mt19937 rng_;
 
     int crystals_, fuel_;
-    int timer_, choice_;
+    int choice_;
+    int computer_timer_, hint_timer_, warp_timer_;
 
     void spawn_enemy();
 

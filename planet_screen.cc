@@ -25,6 +25,7 @@ bool PlanetScreen::update(const Input& input, Audio& audio, unsigned int elapsed
   elapsed = std::min(64u, elapsed);
 
   if (state_ == State::Playing) {
+    hint_timer_ += elapsed;
 
     if (input.key_held(Input::Button::Down)) {
       astronaut_.duck();
@@ -55,7 +56,7 @@ bool PlanetScreen::update(const Input& input, Audio& audio, unsigned int elapsed
     if (input.key_pressed(Input::Button::Start)) {
       audio.play_random_sample("beep.wav", 8);
       state_ = State::Paused;
-      timer_ = 0;
+      computer_timer_ = 0;
       choice_ = 0;
     }
 
@@ -80,18 +81,25 @@ bool PlanetScreen::update(const Input& input, Audio& audio, unsigned int elapsed
 
   } else if (state_ == State::Paused) {
 
-    timer_ += elapsed;
+    computer_timer_ += elapsed;
 
     if (input.key_pressed(Input::Button::Start)) {
       if (choice_ == 1) {
         if (crystals_ >= gs_.requirement()) {
           state_ = State::Returning;
+          warp_timer_ = 0;
           audio.play_random_sample("beep.wav", 8);
           audio.play_sample("teleport.wav");
         } else {
           audio.play_random_sample("nope.wav", 8);
-          // TODO show message about required crystals
           state_ = State::Playing;
+          hint_timer_ = 0;
+
+          if (gs_.requirement() == 1) {
+            hint_ = "The computer said I need to find some crystals.";
+          } else {
+            hint_ = "I need " + std::to_string(gs_.requirement()) + " crystals before I can head back.";
+          }
         }
       } else {
         audio.play_random_sample("beep.wav", 8);
@@ -117,8 +125,8 @@ bool PlanetScreen::update(const Input& input, Audio& audio, unsigned int elapsed
     for (auto& enemy : enemies_) {
       enemy.update(audio, planet_, astronaut_, elapsed);
     }
-    timer_ += elapsed;
-    if (timer_ > 12000) {
+    warp_timer_ += elapsed;
+    if (warp_timer_ > 12000) {
       gs_.crystals += crystals_;
       ++gs_.planets;
 
@@ -146,7 +154,7 @@ void PlanetScreen::draw(Graphics& graphics) const {
 
   if (state_ == State::Paused) {
     graphics.draw_rect({0, 0}, {graphics.width(), graphics.height()}, 0x00000055, true);
-    const int y = std::max(graphics.height() - timer_, 304);
+    const int y = std::max(graphics.height() - computer_timer_, 304);
 
     alerts_.draw(graphics, 2, 136, y);
     text_.draw(graphics, "Explore", 192, y + 24);
@@ -155,14 +163,14 @@ void PlanetScreen::draw(Graphics& graphics) const {
   }
 
   if (state_ == State::Returning) {
-    const int beam = std::min(255, 255 * timer_ / 11000);
+    const int beam = std::min(255, 255 * warp_timer_ / 11000);
     const Rect a = astronaut_.hitbox();
     const Graphics::Point p1 = {(int)a.left - xo, 0};
     const Graphics::Point p2 = {(int)a.right - xo, (int)a.bottom - yo};
     graphics.draw_rect(p1, p2, 0xffcc3300 | beam, true);
 
-    if (timer_ > 11000) {
-      const int fade = 255 * (timer_ - 11000) / 1000;
+    if (warp_timer_ > 11000) {
+      const int fade = 255 * (warp_timer_ - 11000) / 1000;
       graphics.draw_rect({0, 0}, {graphics.width(), graphics.height()}, 0xffffff00 | fade, true);
     }
   }
@@ -175,6 +183,10 @@ void PlanetScreen::draw(Graphics& graphics) const {
 
   text_.draw(graphics, std::to_string(crystals_), graphics.width() - 12, 4, Text::Alignment::Right);
   hud_.draw(graphics, 3, graphics.width() - 12, 4);
+
+  if (!hint_.empty() && hint_timer_ < 5000) {
+    text_.draw(graphics, hint_, graphics.width() / 2, 420, Text::Alignment::Center);
+  }
 }
 
 Screen* PlanetScreen::next_screen() const {
