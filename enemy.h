@@ -9,7 +9,8 @@ class Enemy : public Character {
 
     Enemy(Type t, double x, double y);
 
-    void update(const Planet& map, Audio& audio, unsigned int elapsed) override;
+    void update(const Planet& map, Audio& audio, unsigned int elapsed);
+    void draw(Graphics& graphics, int xo, int yo) const;
     int sprite() const { return 7; }
 
   private:

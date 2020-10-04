@@ -12,7 +12,7 @@ void Player::update(const Planet& map, Audio& audio, unsigned int elapsed) {
 }
 
 void Player::draw(Graphics& graphics, int xo, int yo) const {
-  Character::draw(graphics, xo, yo);
+  sprites_.draw_ex(graphics, sprite(), drawx() - xo, drawy() - yo, facing_ == Facing::Left, 0, 0, 0);
 
 #ifndef NDEBUG
   boxh().draw(graphics, xo, yo, 0x0000ffff, false);

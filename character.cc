@@ -9,13 +9,6 @@ Character::Character(int width, int height) :
   width_(width), height_(height),
   x_(0), y_(0), vx_(0), vy_(0) {}
 
-void Character::draw(Graphics& graphics, int xo, int yo) const {
-  sprites_.draw_ex(graphics, sprite(), drawx() - xo, drawy() - yo, facing_ == Facing::Left, 0, 0, 0);
-#ifndef NDEBUG
-  hitbox().draw(graphics, xo, yo, 0x00ffd8ff, false);
-#endif
-}
-
 Rect Character::hitbox() const {
   return { x_, y_, x_ + width_, y_ + height_ };
 }

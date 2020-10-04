@@ -7,8 +7,8 @@ class Player : public Character {
 
     Player();
 
-    void update(const Planet& map, Audio& audio, unsigned int elapsed) override;
-    void draw(Graphics& graphics, int xo, int yo) const override;
+    void update(const Planet& map, Audio& audio, unsigned int elapsed);
+    void draw(Graphics& graphics, int xo, int yo) const;
 
     void move_left();
     void move_right();
