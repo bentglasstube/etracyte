@@ -107,8 +107,8 @@ Item Planet::take_item(double x, double y) {
 }
 
 void Planet::draw(Graphics& graphics, int xo, int yo) const {
-  const int xoo = xo;
   while (xo < 0) xo += pixel_width();
+  while (xo >= pixel_width()) xo -= pixel_width();
 
   int ty = std::floor(yo / kTileSize);
   int gy = -(yo % kTileSize);
@@ -124,8 +124,11 @@ void Planet::draw(Graphics& graphics, int xo, int yo) const {
     gy += kTileSize;
   }
 
+  // TODO optimization
+  // calculate window and draw items within instead of bootleg drawing all items twice
   for (const auto& i : items_) {
-    i.draw(graphics, xoo, yo);
+    i.draw(graphics, xo, yo);
+    i.draw(graphics, xo - pixel_width(), yo);
   }
 }
 
