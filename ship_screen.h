@@ -16,7 +16,7 @@ class ShipScreen : public Screen {
 
     ShipScreen(GameState s);
 
-    enum class State { Zooming, Warning, Lore, Descend };
+    enum class State { Preparing, Hyperspeed, Warning, Lore, Descend };
 
     bool update(const Input&, Audio&, unsigned int) override;
     void draw(Graphics& graphics) const override;
@@ -54,4 +54,7 @@ class ShipScreen : public Screen {
 
     void update_stars(unsigned int elapsed);
     void transition(State state);
+
+    void generate_welcome_message();
+    void generate_planet_lore();
 };

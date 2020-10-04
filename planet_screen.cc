@@ -84,7 +84,7 @@ bool PlanetScreen::update(const Input& input, Audio& audio, unsigned int elapsed
 
     if (input.key_pressed(Input::Button::Start)) {
       if (choice_ == 1) {
-        if (crystals_ >= 1) {
+        if (crystals_ >= gs_.requirement()) {
           state_ = State::Returning;
           audio.play_random_sample("beep.wav", 8);
           audio.play_sample("teleport.wav");
@@ -118,7 +118,12 @@ bool PlanetScreen::update(const Input& input, Audio& audio, unsigned int elapsed
       enemy.update(audio, planet_, astronaut_, elapsed);
     }
     timer_ += elapsed;
-    if (timer_ > 12000) return false;
+    if (timer_ > 12000) {
+      gs_.crystals += crystals_;
+      ++gs_.planets;
+
+      return false;
+    }
   }
 
   return true;
