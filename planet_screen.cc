@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-PlanetScreen::PlanetScreen() : text_("text.png"), planet_(), camera_(), astronaut_() {
+PlanetScreen::PlanetScreen() : text_("text.png"), planet_(), camera_(), astronaut_(), crystals_(0) {
   astronaut_.set_position(0, -100);
   camera_.snap(astronaut_, planet_);
 }
@@ -28,6 +28,18 @@ bool PlanetScreen::update(const Input& input, Audio&, unsigned int elapsed) {
     astronaut_.jump();
   }
 
+  const Item& item = planet_.take_item(astronaut_.x(), astronaut_.y());
+  switch (item.type()) {
+    case Item::Type::Crystal:
+      crystals_++;
+      break;
+
+    default:
+      // do nothing
+      break;
+  }
+
+
   astronaut_.update(planet_, elapsed);
   camera_.update(astronaut_, planet_, elapsed);
 
@@ -38,8 +50,8 @@ void PlanetScreen::draw(Graphics& graphics) const {
   planet_.draw(graphics, camera_.xoffset(), camera_.yoffset());
   astronaut_.draw(graphics, camera_.xoffset(), camera_.yoffset());
 
+  text_.draw(graphics, std::to_string(crystals_), graphics.width(), 0, Text::Alignment::Right);
   text_.draw(graphics, std::to_string((int)astronaut_.x()), 0, 0);
-  text_.draw(graphics, std::to_string((int)astronaut_.y()), 0, 16);
 }
 
 Screen* PlanetScreen::next_screen() const {

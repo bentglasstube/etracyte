@@ -3,10 +3,12 @@
 #include <array>
 #include <iostream>
 #include <random>
+#include <vector>
 
 #include "graphics.h"
 #include "spritemap.h"
 
+#include "item.h"
 #include "rect.h"
 
 class Planet {
@@ -47,6 +49,7 @@ class Planet {
 
     Planet();
 
+    Item take_item(double x, double y);
     void draw(Graphics& graphics, int xo, int yo) const;
 
     Tile tile(double x, double y) const;
@@ -64,6 +67,7 @@ class Planet {
     SpriteMap sprites_;
     std::mt19937 rand_;
     std::array<Tile, kMapHeight * kMapWidth> tiles_;
+    std::vector<Item> items_;
 
     void set_tile(int x, int y, Tile::Value v);
     int index(int x, int y) const;

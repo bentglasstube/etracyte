@@ -23,4 +23,7 @@ class PlanetScreen : public Screen {
     Planet planet_;
     Camera camera_;
     Player astronaut_;
+
+    int crystals_;
+
 };

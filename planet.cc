@@ -52,6 +52,28 @@ Planet::Planet() : sprites_("terrain.png", 9, 16, 16) {
       }
     }
   }
+
+  std::uniform_int_distribution<int> percent(0, 99);
+
+  for (int y = 0; y < kMapHeight; ++y) {
+    const double iy = (y + 1) * kTileSize;
+
+    for (int x = 0; x < kMapWidth; ++x) {
+      const double ix = (x + 0.5) * kTileSize;
+
+      if (get_tile(x, y) == Tile::Cave) {
+        if (get_tile(x, y - 1) == Tile::Rock) {
+          if (percent(rand_) < 10) {
+            items_.emplace_back(Item::Type::Stalactite, ix, iy, percent(rand_) % 2);
+          }
+        } else if (get_tile(x, y + 1) == Tile::Rock) {
+          if (percent(rand_) < 2) {
+            items_.emplace_back(Item::Type::Crystal, ix, iy, percent(rand_) % 2);
+          }
+        }
+      }
+    }
+  }
 }
 
 int Planet::Tile::sprite() const {
@@ -69,7 +91,23 @@ int Planet::Tile::sprite() const {
   }
 }
 
+Item Planet::take_item(double x, double y) {
+  while (x < 0) x += pixel_width();
+  while (x >= pixel_width()) x -= pixel_width();
+
+  for (size_t i = 0; i < items_.size(); ++i) {
+    const Item item = items_[i];
+    if (item.collecitble() && item.rect().contains(x, y)) {
+      items_.erase(items_.begin() + i);
+      return item;
+    }
+  }
+
+  return Item::Nothing();
+}
+
 void Planet::draw(Graphics& graphics, int xo, int yo) const {
+  const int xoo = xo;
   while (xo < 0) xo += pixel_width();
 
   int ty = std::floor(yo / kTileSize);
@@ -84,6 +122,10 @@ void Planet::draw(Graphics& graphics, int xo, int yo) const {
     }
     ++ty;
     gy += kTileSize;
+  }
+
+  for (const auto& i : items_) {
+    i.draw(graphics, xoo, yo);
   }
 }
 

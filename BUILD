@@ -44,6 +44,7 @@ cc_library(
     ],
     deps = [
         "@libgam//:spritemap",
+        ":item",
         ":rect",
     ],
 )
@@ -80,6 +81,16 @@ cc_library(
     deps = [
         "@libgam//:spritemap",
         ":planet",
+        ":rect",
+    ],
+)
+
+cc_library(
+    name = "item",
+    srcs = ["item.cc"],
+    hdrs = ["item.h"],
+    deps = [
+        "@libgam//:spritemap",
         ":rect",
     ],
 )

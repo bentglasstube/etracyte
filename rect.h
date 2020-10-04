@@ -10,5 +10,6 @@ class Rect {
 
     double top, left, right, bottom;
     bool intersect(const Rect& other) const;
+    bool contains(double x, double y) const;
     void draw(Graphics& graphics, int xo, int yo, Graphics::Color color, bool filled) const;
 };
