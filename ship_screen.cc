@@ -5,7 +5,10 @@
 
 #include "planet_screen.h"
 
-ShipScreen::ShipScreen() : bridge_("bridge.png"), text_("text.png"), stretch_(1.0) {
+ShipScreen::ShipScreen() :
+  bridge_("bridge.png"), text_("text.png"), state_(State::Zooming),
+  stretch_(1000.0), timer_(0)
+{
   std::random_device dev;
   rng_.seed(dev());
 
@@ -25,16 +28,44 @@ ShipScreen::ShipScreen() : bridge_("bridge.png"), text_("text.png"), stretch_(1.
   }
 }
 
-bool ShipScreen::update(const Input& input, Audio&, unsigned int elapsed) {
+bool ShipScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
   update_stars(elapsed);
 
-  if (input.key_held(Input::Button::B)) {
-    stretch_ = std::min(5000.0, stretch_ * 1.1);
+  timer_ += elapsed;
+  if (state_ == State::Zooming) {
+    stretch_ = std::min(1000.0, stretch_ * 1.1);
   } else {
-    stretch_ = std::max(1.0, stretch_ / 2.0);
+    stretch_ = std::max(1.0, stretch_ * 0.95);
   }
 
-  return !input.key_pressed(Input::Button::A);
+  switch (state_) {
+    case State::Zooming:
+      if (timer_ > 3000) {
+        transition(State::Warning);
+        audio.play_sample("alert.wav");
+      }
+      break;
+
+    case State::Warning:
+      // TODO show engine warnings
+      if (input.any_pressed()) {
+        transition(State::Lore);
+      }
+      break;
+
+    case State::Lore:
+      // TODO show planet information
+      if (input.any_pressed()) {
+        transition(State::Descend);
+      }
+      break;
+
+    case State::Descend:
+      if (timer_ > 1000) return false;
+      break;
+  }
+
+  return true;
 }
 
 void ShipScreen::update_stars(unsigned int elapsed) {
@@ -61,7 +92,26 @@ void ShipScreen::draw(Graphics& graphics) const {
   }
 
   bridge_.draw(graphics);
-  text_.draw(graphics, std::to_string(stretch_), 0, 0);
+
+  Rect full = {0, 0, (double)graphics.width(), (double)graphics.height()};
+
+  switch (state_) {
+    case State::Warning:
+      if ((timer_ % 1223) < 725) full.draw(graphics, 0, 0, 0xff000044, true);
+      break;
+
+    case State::Descend:
+      full.draw(graphics, 0, 0, (255 * timer_ / 1000), true);
+      break;
+
+    default:
+      break;
+  }
+}
+
+void ShipScreen::transition(State state) {
+  state_ = state;
+  timer_ = 0;
 }
 
 Screen* ShipScreen::next_screen() const {

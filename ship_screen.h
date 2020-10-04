@@ -11,9 +11,12 @@ class ShipScreen : public Screen {
 
     ShipScreen();
 
+    enum class State { Zooming, Warning, Lore, Descend };
+
     bool update(const Input&, Audio&, unsigned int) override;
     void draw(Graphics& graphics) const override;
 
+    std::string get_music_track() const override { return "captain.ogg"; }
     Screen* next_screen() const override;
 
   private:
@@ -25,10 +28,14 @@ class ShipScreen : public Screen {
 
     Backdrop bridge_;
     Text text_;
+    State state_;
+
+    double stretch_;
+    int timer_;
 
     std::vector<Star> stars_;
     std::mt19937 rng_;
-    double stretch_;
 
     void update_stars(unsigned int elapsed);
+    void transition(State state);
 };
