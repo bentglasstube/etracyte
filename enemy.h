@@ -10,10 +10,10 @@
 class Enemy : public Character {
   public:
 
-    enum class Type { Bat };
     enum class State { Waiting, Attacking, Sleeping };
 
-    Enemy(Type t, double x, double y);
+    Enemy(double x, double y);
+    ~Enemy() = default;
 
     void update(Audio& audio, const Planet& map, const Character& target, unsigned int elapsed);
     void draw(Graphics& graphics, int xo, int yo) const;
@@ -30,7 +30,6 @@ class Enemy : public Character {
     static constexpr double kSwoopAccel = -0.0001;
     static constexpr int kSleepTime = 500;
 
-    Type type_;
     State state_;
     int timer_;
     double ay_;

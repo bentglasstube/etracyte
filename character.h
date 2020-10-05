@@ -11,6 +11,7 @@ class Character {
 
     enum class Facing { Left, Right };
     Character(int width, int height);
+    virtual ~Character() = default;
 
     double x() const { return x_; }
     double y() const { return y_; }

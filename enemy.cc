@@ -1,7 +1,7 @@
 #include "enemy.h"
 
-Enemy::Enemy(Type t, double x, double y) :
-  Character(8, 6), type_(t), state_(State::Waiting),
+Enemy::Enemy(double x, double y) :
+  Character(8, 6), state_(State::Waiting),
   timer_(0), ay_(0)
 {
   set_position(x, y);

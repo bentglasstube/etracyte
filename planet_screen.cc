@@ -201,6 +201,6 @@ void PlanetScreen::spawn_enemy() {
 
   if (tile == Planet::Tile::Rock) {
     const auto r = tile.rect();
-    enemies_.emplace_back(Enemy::Type::Bat, (r.left + r.right) / 2, r.bottom + 6);
+    enemies_.emplace_back((r.left + r.right) / 2, r.bottom + 6);
   }
 }
