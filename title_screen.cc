@@ -20,7 +20,7 @@ bool TitleScreen::update(const Input& input, Audio&, unsigned int elapsed) {
 void TitleScreen::draw(Graphics& graphics) const {
   title_.draw(graphics);
   if (blink_timer_ < 500) {
-    text_.draw(graphics, "Press Any Key", 256, 420, Text::Alignment::Center);
+    text_.draw(graphics, "Press Start", 256, 420, Text::Alignment::Center);
   }
 }
 
