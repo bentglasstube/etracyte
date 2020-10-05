@@ -4,6 +4,8 @@
 #include <cmath>
 #include <vector>
 
+#include "util.h"
+
 #include "planet_screen.h"
 
 ShipScreen::ShipScreen(GameState gs) :
@@ -11,8 +13,7 @@ ShipScreen::ShipScreen(GameState gs) :
   alerts_("alerts.png", 1, 240, 112),
   state_(State::Hyperspeed), stretch_(1000.0), timer_(0)
 {
-  std::random_device dev;
-  rng_.seed(dev());
+  rng_.seed(Util::random_seed());
 
   std::uniform_real_distribution<double> vel(0.04, 0.08);
   std::uniform_real_distribution<double> angle(0.00, 2 * M_PI);

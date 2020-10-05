@@ -33,6 +33,7 @@ cc_library(
         "@libgam//:screen",
         "@libgam//:spritemap",
         "@libgam//:text",
+        "@libgam//:util",
         ":appearing_text",
         ":camera",
         ":characters",
@@ -49,6 +50,7 @@ cc_library(
     ],
     deps = [
         "@libgam//:spritemap",
+        "@libgam//:util",
         ":item",
         ":rect",
     ],
@@ -88,6 +90,7 @@ cc_library(
     deps = [
         "@libgam//:audio",
         "@libgam//:spritemap",
+        "@libgam//:util",
         ":planet",
         ":rect",
     ],

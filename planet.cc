@@ -4,12 +4,13 @@
 #include <cassert>
 #include <iostream>
 
+#include "util.h"
+
 #define STB_PERLIN_IMPLEMENTATION
 #include "stb_perlin.h"
 
 Planet::Planet() : sprites_("terrain.png", 9, 16, 16) {
-  std::random_device dev;
-  rand_.seed(dev());
+  rand_.seed(Util::random_seed());
 
   std::uniform_real_distribution<double> rns(0.0, 1.0);
   const double noise_seed = rns(rand_);
