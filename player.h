@@ -19,7 +19,7 @@ class Player : public Character {
 
     bool ducking() const { return ducking_; }
     bool crouched() const { return grounded() && ducking(); }
-    Rect hitbox() const;
+    Rect hitbox() const override;
 
   private:
 
