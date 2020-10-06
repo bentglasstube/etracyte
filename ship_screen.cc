@@ -162,9 +162,9 @@ void ShipScreen::generate_welcome_message() {
   message_.reset(new AppearingText(
     "Welcome back!\n"
     "You now have " + std::to_string(gs_.crystals) + "\n"
-    "etracyte crystals.  Go\n"
-    "to a new planet to look\n"
-    "for more."));
+    "etracyte crystals.\n"
+    "Go to a new planet to\n"
+    "look for more."));
 }
 
 /* static constexpr std::vector<std::string_view> kPlanetNameBeginnings = { */
