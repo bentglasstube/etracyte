@@ -5,6 +5,7 @@ endif
 
 SOURCES=$(wildcard *.cc) $(wildcard gam/*.cc)
 CONTENT=$(wildcard content/*.png) $(wildcard content/*.ogg) $(wildcard content/*.wav)
+ICONS=icon.png
 BUILDDIR=$(CROSS)output
 OBJECTS=$(patsubst %.cc,$(BUILDDIR)/%.o,$(SOURCES))
 NAME=etracyte
@@ -16,6 +17,7 @@ AR=$(CROSS)ar
 PKG_CONFIG=$(CROSS)pkg-config
 CFLAGS=-O3 --std=c++17 -Wall -Wextra -Werror -pedantic -I gam -DNDEBUG
 EMFLAGS=-s USE_SDL=2 -s USE_SDL_MIXER=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["png"]' -s USE_OGG=1 -s USE_VORBIS=1
+EXTRA=
 
 EXECUTABLE=$(BUILDDIR)/$(NAME)
 
@@ -24,6 +26,7 @@ ifeq ($(UNAME), Windows)
 	LDFLAGS=-static-libstdc++ -static-libgcc
 	LDLIBS=`$(PKG_CONFIG) sdl2 SDL2_mixer SDL2_image --cflags --libs` -Wl,-Bstatic
 	EXECUTABLE=$(BUILDDIR)/$(NAME).exe
+	EXTRA=icon.res.o
 endif
 ifeq ($(UNAME), Linux)
 	PACKAGE=$(NAME)-linux-$(VERSION).AppImage
@@ -48,14 +51,23 @@ echo:
 run: $(EXECUTABLE)
 	./$(EXECUTABLE)
 
-$(EXECUTABLE): $(OBJECTS)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJECTS) $(LDLIBS)
+$(EXECUTABLE): $(OBJECTS) $(EXTRA)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJECTS) $(EXTRA) $(LDLIBS)
 
 $(BUILDDIR)/%.o: %.cc
 	@mkdir -p $(BUILDDIR)/gam
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 package: $(PACKAGE)
+
+icon.res.o: icon.rc
+	$(CROSS)windres $< -O coff $@
+
+icon.rc: icon.ico
+	echo "420 ICON $<" > $@
+
+icon.ico: $(ICONS)
+	convert $< $@
 
 wasm: $(NAME)-$(VERSION).html
 

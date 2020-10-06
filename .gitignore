@@ -10,3 +10,6 @@ bazel-*
 /*.wasm
 /*-web-*/
 *output/
+icon.ico
+icon.rc
+icon.res.o
