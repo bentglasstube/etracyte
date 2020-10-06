@@ -23,7 +23,7 @@ class PlanetScreen : public Screen {
     void draw(Graphics& graphics) const override;
 
     Screen* next_screen() const override;
-    std::string get_music_track() const override { return "space.ogg"; }
+    std::string get_music_track() const override { return "depths.ogg"; }
 
   private:
 
