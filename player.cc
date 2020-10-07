@@ -74,7 +74,7 @@ void Player::updatex(const Planet& map, unsigned int elapsed) {
   if (grounded()) {
     double friction = map.tile(x_, y_ + 1).friction();
     vx_ = apply_friction(friction, vx_, elapsed);
-    if (!crouched()) vx_ = apply_acceleration(ax_ * kGroundAccel, kMaxSpeed, vx_, elapsed);
+    if (!ducking()) vx_ = apply_acceleration(ax_ * kGroundAccel, kMaxSpeed, vx_, elapsed);
   } else {
     vx_ = apply_acceleration(ax_ * kAirAccel, kMaxSpeed, vx_, elapsed);
   }
