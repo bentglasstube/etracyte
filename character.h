@@ -42,6 +42,6 @@ class Character {
     void bounceh(const Rect& box, double bounce = 0.0);
     void bouncev(const Rect& box, double bounce = 0.0);
 
-    double apply_friction(double friction, double velocity, unsigned int elapsed) const;
-    double apply_acceleration(double accel, double max, double velocity, unsigned int elapsed) const;
+    static double apply_friction(double friction, double velocity, unsigned int elapsed);
+    static double apply_acceleration(double accel, double max, double velocity, unsigned int elapsed);
 };

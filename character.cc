@@ -51,10 +51,10 @@ double Character::dist2(const Character& other) const {
   return dx * dx + dy * dy;
 }
 
-double Character::apply_friction(double f, double v, unsigned int t) const {
+double Character::apply_friction(double f, double v, unsigned int t) {
   return v > 0 ? std::max(0.0, v - f * t) : std::min(0.0, v + f * t);
 }
 
-double Character::apply_acceleration(double a, double m, double v, unsigned int t) const {
+double Character::apply_acceleration(double a, double m, double v, unsigned int t) {
   return a > 0 ? std::min(m, v + a * t) : std::max(-m, v + a * t);
 }
