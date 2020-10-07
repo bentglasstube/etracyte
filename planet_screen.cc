@@ -15,6 +15,9 @@ PlanetScreen::PlanetScreen(GameState gs) :
   planet_(), camera_(), astronaut_(), state_(State::Playing),
   crystals_(0), fuel_(10)
 {
+  rng_.seed(Util::random_seed());
+
+  planet_.generate(rng_());
   astronaut_.set_position(planet_.pixel_width() / 2, -100);
   camera_.snap(astronaut_, planet_);
 
@@ -225,7 +228,7 @@ void PlanetScreen::spawn_enemy() {
 
   if (tile == Planet::Tile::Rock) {
     const auto r = tile.rect();
-    enemies_.emplace_back((r.left + r.right) / 2, r.bottom + 6);
+    enemies_.emplace_back((r.left + r.right) / 2, r.bottom + 6, rng_());
   }
 }
 

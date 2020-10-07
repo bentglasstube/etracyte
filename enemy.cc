@@ -1,13 +1,11 @@
 #include "enemy.h"
 
-#include "util.h"
-
-Enemy::Enemy(double x, double y) :
+Enemy::Enemy(double x, double y, unsigned int seed) :
   Character(8, 6), state_(State::Waiting),
   timer_(0), ay_(0)
 {
   set_position(x, y);
-  rng_.seed(Util::random_seed());
+  rng_.seed(seed);
 }
 
 void Enemy::update(Audio& audio, const Planet& map, const Character& target, unsigned int elapsed) {

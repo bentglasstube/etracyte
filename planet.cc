@@ -4,16 +4,16 @@
 #include <cassert>
 #include <iostream>
 
-#include "util.h"
-
 #define STB_PERLIN_IMPLEMENTATION
 #include "stb_perlin.h"
 
-Planet::Planet() : sprites_("terrain.png", 9, 16, 16) {
-  rand_.seed(Util::random_seed());
+Planet::Planet() : sprites_("terrain.png", 9, 16, 16) {}
+
+void Planet::generate(unsigned int seed) {
+  rng_.seed(seed);
 
   std::uniform_real_distribution<double> rns(0.0, 1.0);
-  const double noise_seed = rns(rand_);
+  const double noise_seed = rns(rng_);
 
   for (int x = 0; x < kMapWidth; ++x) {
     int surface_height = 64 + (int)(64 * stb_perlin_turbulence_noise3(surface_x(x), 0, noise_seed, 2.0f, 0.5f, 6));
@@ -64,12 +64,12 @@ Planet::Planet() : sprites_("terrain.png", 9, 16, 16) {
 
       if (get_tile(x, y) == Tile::Cave) {
         if (get_tile(x, y - 1) == Tile::Rock) {
-          if (percent(rand_) < 10) {
-            items_.emplace_back(Item::Type::Stalactite, ix, iy, percent(rand_) % 2);
+          if (percent(rng_) < 10) {
+            items_.emplace_back(Item::Type::Stalactite, ix, iy, percent(rng_) % 2);
           }
         } else if (get_tile(x, y + 1) == Tile::Rock) {
-          if (percent(rand_) < 2) {
-            items_.emplace_back(Item::Type::Crystal, ix, iy, percent(rand_) % 2);
+          if (percent(rng_) < 2) {
+            items_.emplace_back(Item::Type::Crystal, ix, iy, percent(rng_) % 2);
           }
         }
       }
@@ -175,7 +175,7 @@ void Planet::set_tile(int x, int y, Tile::Value v) {
   assert(y >= 0 && y < kMapHeight);
   std::uniform_int_distribution<int> flavor(0, 3);
 
-  tiles_[index(x, y)] = Tile(v, x, y, flavor(rand_));
+  tiles_[index(x, y)] = Tile(v, x, y, flavor(rng_));
 }
 
 Planet::Tile Planet::tile(double x, double y) const {
@@ -240,7 +240,7 @@ Planet::Tile Planet::get_random_tile(Tile::Value v) {
   std::uniform_int_distribution<int> yr(0, kMapHeight - 1);
 
   while (true) {
-    const Tile t = get_tile(xr(rand_), yr(rand_));
+    const Tile t = get_tile(xr(rng_), yr(rng_));
     if (t == v) return t;
   }
 }

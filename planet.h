@@ -51,6 +51,7 @@ class Planet {
     };
 
     Planet();
+    void generate(unsigned int seed);
 
     Item take_item(double x, double y);
     void draw(Graphics& graphics, int xo, int yo) const;
@@ -70,7 +71,7 @@ class Planet {
     static constexpr int kTileSize = 16;
 
     SpriteMap sprites_;
-    std::mt19937 rand_;
+    std::mt19937 rng_;
     std::array<Tile, kMapHeight * kMapWidth> tiles_;
     std::vector<Item> items_;
 

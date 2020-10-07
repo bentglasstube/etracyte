@@ -12,7 +12,7 @@ class Enemy : public Character {
 
     enum class State { Waiting, Attacking, Sleeping };
 
-    Enemy(double x, double y);
+    Enemy(double x, double y, unsigned int seed);
     ~Enemy() = default;
 
     void update(Audio& audio, const Planet& map, const Character& target, unsigned int elapsed);
