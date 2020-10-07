@@ -26,7 +26,7 @@ ifeq ($(UNAME), Windows)
 	LDFLAGS=-static-libstdc++ -static-libgcc
 	LDLIBS=`$(PKG_CONFIG) sdl2 SDL2_mixer SDL2_image --cflags --libs` -Wl,-Bstatic
 	EXECUTABLE=$(BUILDDIR)/$(NAME).exe
-	EXTRA=icon.res.o
+	EXTRA=$(BUILDDIR)/icon.res.o
 endif
 ifeq ($(UNAME), Linux)
 	PACKAGE=$(NAME)-linux-$(VERSION).AppImage
@@ -60,13 +60,13 @@ $(BUILDDIR)/%.o: %.cc
 
 package: $(PACKAGE)
 
-icon.res.o: icon.rc
+$(BUILDDIR)/icon.res.o: $(BUILDDIR)/icon.rc
 	$(CROSS)windres $< -O coff $@
 
-icon.rc: icon.ico
+$(BUILDDIR)/icon.rc: $(BUILDDIR)/icon.ico
 	echo "420 ICON $<" > $@
 
-icon.ico: $(ICONS)
+$(BUILDDIR)/icon.ico: $(ICONS)
 	convert $< $@
 
 wasm: $(NAME)-$(VERSION).html
