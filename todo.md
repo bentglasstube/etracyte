@@ -1,5 +1,8 @@
-Things to do
-============
+Etracyte To Do List
+-------------------
+
+Ludum Dare
+==========
 
 [x] Make bats do something
 [x] Ship screen
@@ -10,27 +13,38 @@ Things to do
 [x] In-game story
 [x] Game Progression
 [x] More Music
-[ ] Parallax starfield background
+
+Post Jam
+========
+
+### Fixes
+
+[x] Fix friction
+[ ] Fix wrapping
+[ ] Allow fixed seeding
+
+### Graphical improvements
+
+[x] Parallax starfield background
 [ ] Improved terrain graphics
-[ ] Planet names
 [ ] Ship on title screen
 
---- Not happening for LD ---
+### Story Improvements
+
+[ ] Planet names
+[ ] In-game hints
+
+### New Mechanics
 
 [ ] Bird Boss
-[ ] In-game hints
 [ ] Get into orbit
 [ ] Health/Damage/Knockback
 [ ] More enemies
-[ ] Fix friction
-[ ] Fix wrapping
 [ ] Multiple biomes
 [ ] More resources
-[ ] Allow fixed seeding
 
-
-Progression
-===========
+Progression Ideas
+=================
 
 Collect crystals, return to ship.  Use crystals to purchase upgrades.
 
@@ -41,8 +55,10 @@ Collect crystals, return to ship.  Use crystals to purchase upgrades.
  * Repair Suit - Heal damage sustained
  * Faster Transport - Reduced transport time
  * Suit Battery - More room for activities
+ * Power Drill - Use suit's power to drill dirt
 
 Use crystals to refill ship reserves, allowing you to travel to other
 planets.
 
-Planet difficult is determined by the number of crystals you had collected so far when it is generated.
+Planet difficult is determined by the number of crystals you had collected so
+far when it is generated.
