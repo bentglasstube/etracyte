@@ -2,6 +2,10 @@
 
 #include "character.h"
 
+#ifndef NDEBUG
+#include "text.h"
+#endif
+
 class Player : public Character {
   public:
 
@@ -14,6 +18,7 @@ class Player : public Character {
     void move_right();
     void stop();
     void jump();
+    void cut_jump();
     void duck();
     void stand();
 
@@ -23,22 +28,27 @@ class Player : public Character {
 
   private:
 
-    static constexpr double kGravity = 0.0005;
-    static constexpr double kJumpSpeed = 0.3;
-    static constexpr double kAccel = 0.002;
-    static constexpr double kDampen = 0.75;
+    static constexpr double kGravity = 0.0006;
+    static constexpr double kMaxFall = 0.5;
+
+    static constexpr double kGroundAccel = 0.001;
+    static constexpr double kAirAccel = 0.0002;
+    static constexpr double kMaxSpeed = 0.14;
+
+    static constexpr double kJumpSpeed = 0.35;
+    static constexpr double kJumpCutSpeed = 0.15;
     static constexpr double kBonkForce = 0.2;
 
     static constexpr int kWidth = 16;
     static constexpr int kHalfWidth = kWidth / 2;
     static constexpr int kHeight = 32;
 
-    double ax_;
-    int timer_;
+    int ax_, timer_;
     bool ducking_;
 
 #ifndef NDEBUG
     Rect xcol_, ycol_;
+    Text text_;
 #endif
 
     void updatex(const Planet& map, unsigned int elapsed);

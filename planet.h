@@ -40,6 +40,10 @@ class Planet {
           }
         }
 
+        double friction() const {
+          return 0.0005;
+        }
+
         int sprite() const;
 
         Value value;

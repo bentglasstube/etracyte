@@ -53,6 +53,10 @@ bool PlanetScreen::update(const Input& input, Audio& audio, unsigned int elapsed
       }
     }
 
+    if (input.key_released(Input::Button::A)) {
+      astronaut_.cut_jump();
+    }
+
     if (input.key_pressed(Input::Button::Start)) {
       audio.play_random_sample("beep.wav", 8);
       state_ = State::Paused;

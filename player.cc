@@ -2,13 +2,26 @@
 
 #include <cassert>
 
-Player::Player() : Character(kWidth, kHeight) {}
+#ifndef NDEBUG
+#include <sstream>
+
+std::string _str(const double v, int n = 2) {
+  std::ostringstream out;
+  out.precision(n);
+  out << std::fixed << v;
+  return out.str();
+}
+#endif
+
+Player::Player() : Character(kWidth, kHeight)
+#ifndef NDEBUG
+   , text_("text-tiny.png", 8, 8)
+#endif
+{}
 
 void Player::update(const Planet& map, Audio& audio, unsigned int elapsed) {
   updatex(map, elapsed);
   updatey(map, audio, elapsed);
-
-  vx_ *= kDampen;
 }
 
 void Player::draw(Graphics& graphics, int xo, int yo) const {
@@ -19,17 +32,22 @@ void Player::draw(Graphics& graphics, int xo, int yo) const {
   boxv().draw(graphics, xo, yo, 0x0000ffff, false);
   xcol_.draw(graphics, xo, yo, 0xff0000ff, false);
   ycol_.draw(graphics, xo, yo, 0x880000ff, false);
+
+  text_.draw(graphics, "x:" + _str(x_), 0, 424);
+  text_.draw(graphics, _str(vx_), 96, 424);
+  text_.draw(graphics, "y:" + _str(y_), 0, 432);
+  text_.draw(graphics, _str(vy_), 96, 432);
 #endif
 }
 
 void Player::move_left() {
-  facing_ = Facing::Left;
-  ax_ = -kAccel;
+  if (grounded()) facing_ = Facing::Left;
+  ax_ = -1;
 }
 
 void Player::move_right() {
-  facing_ = Facing::Right;
-  ax_ = kAccel;
+  if (grounded()) facing_ = Facing::Right;
+  ax_ = 1;
 }
 
 void Player::stop() {
@@ -38,6 +56,10 @@ void Player::stop() {
 
 void Player::jump() {
   vy_ = -kJumpSpeed;
+}
+
+void Player::cut_jump() {
+  vy_ = std::max(-kJumpCutSpeed, vy_);
 }
 
 void Player::duck() {
@@ -49,7 +71,13 @@ void Player::stand() {
 }
 
 void Player::updatex(const Planet& map, unsigned int elapsed) {
-  if (!crouched()) vx_ += ax_ * elapsed;
+  if (grounded()) {
+    double friction = map.tile(x_, y_ + 1).friction();
+    vx_ = apply_friction(friction, vx_, elapsed);
+    if (!crouched()) vx_ = apply_acceleration(ax_ * kGroundAccel, kMaxSpeed, vx_, elapsed);
+  } else {
+    vx_ = apply_acceleration(ax_ * kAirAccel, kMaxSpeed, vx_, elapsed);
+  }
 
   Planet::Tile tile = map.collision(boxh(), vx_ * elapsed, 0);
   if (tile.obstructs()) {
@@ -65,7 +93,7 @@ void Player::updatex(const Planet& map, unsigned int elapsed) {
 }
 
 void Player::updatey(const Planet& map, Audio& audio, unsigned int elapsed) {
-  vy_ += kGravity * elapsed;
+  vy_ = apply_acceleration(kGravity, kMaxFall, vy_, elapsed);
   grounded_ = false;
 
   Planet::Tile tile = map.collision(boxv(), 0, vy_ * elapsed);

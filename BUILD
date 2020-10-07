@@ -90,6 +90,7 @@ cc_library(
     deps = [
         "@libgam//:audio",
         "@libgam//:spritemap",
+        "@libgam//:text",
         "@libgam//:util",
         ":planet",
         ":rect",
