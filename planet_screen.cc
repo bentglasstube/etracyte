@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <iostream>
 
+#include "util.h"
+
 #include "ship_screen.h"
 
 PlanetScreen::PlanetScreen(GameState gs) :
@@ -18,6 +20,20 @@ PlanetScreen::PlanetScreen(GameState gs) :
 
   for (int i = 0; i < kEnemies; ++i) {
     spawn_enemy();
+  }
+
+  rng_.seed(Util::random_seed());
+
+  std::uniform_int_distribution<int> rx(0, planet_.pixel_width() / 4);
+  std::uniform_int_distribution<int> ry(0, planet_.pixel_height() / 4);
+  std::uniform_int_distribution<Graphics::Color> rc(200, 255);
+  std::uniform_int_distribution<int> rscale(32, 64);
+
+  for (int i = 0; i < kStars; ++i) {
+    stars_.push_back({
+        rx(rng_), ry(rng_), rscale(rng_),
+        rc(rng_) << 24 | rc(rng_) << 16 | rc(rng_) << 8 | 0xff,
+    });
   }
 }
 
@@ -146,6 +162,10 @@ void PlanetScreen::draw(Graphics& graphics) const {
   const int yo = camera_.yoffset();
   const int pw = planet_.pixel_width();
 
+  for (const auto& star : stars_) {
+    star.draw(graphics, xo, yo);
+  }
+
   planet_.draw(graphics, xo, yo);
   astronaut_.draw(graphics, xo, yo);
 
@@ -208,3 +228,8 @@ void PlanetScreen::spawn_enemy() {
     enemies_.emplace_back((r.left + r.right) / 2, r.bottom + 6);
   }
 }
+
+void PlanetScreen::Star::draw(Graphics& graphics, int xo, int yo) const {
+  graphics.draw_pixel({x - xo / scale, y - yo / scale}, color);
+}
+

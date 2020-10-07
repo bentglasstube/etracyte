@@ -28,6 +28,13 @@ class PlanetScreen : public Screen {
   private:
 
     static constexpr int kEnemies = 2000;
+    static constexpr int kStars = 2000;
+
+    struct Star {
+      int x, y, scale;
+      Graphics::Color color;
+      void draw(Graphics& graphics, int xo, int yo) const;
+    };
 
     GameState gs_;
     Text text_;
@@ -37,6 +44,7 @@ class PlanetScreen : public Screen {
     Player astronaut_;
     State state_;
     std::vector<Enemy> enemies_;
+    std::vector<Star> stars_;
     std::string hint_;
 
     std::mt19937 rng_;

@@ -117,7 +117,8 @@ void Planet::draw(Graphics& graphics, int xo, int yo) const {
     int tx = std::floor(xo / kTileSize);
     int gx = -(xo % kTileSize);
     while (gx < graphics.width()) {
-      sprites_.draw(graphics, get_tile(tx, ty).sprite(), gx, gy);
+      const Tile t = get_tile(tx, ty);
+      if (t != Tile::Air) sprites_.draw(graphics, t.sprite(), gx, gy);
       ++tx;
       gx += kTileSize;
     }
