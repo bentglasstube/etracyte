@@ -51,6 +51,17 @@ echo:
 run: $(EXECUTABLE)
 	./$(EXECUTABLE)
 
+video: $(BUILDDIR)/$(NAME).mkv
+
+$(BUILDDIR)/$(NAME).mkv: $(BUILDDIR)/$(NAME).glc $(BUILDDIR)/$(NAME).wav
+	glc-play $< -o - -y 1 |ffmpeg -i - -i $(NAME).wav -acodec flac --vcodec libx264 -y $@
+
+$(BUILDDIR)/$(NAME).wav: $(BUILDDIR)/$(NAME).glc
+	glc-play $< -a 1 -o $@
+
+$(BUILDDIR)/$(NAME).glc: $(EXECUTABLE)
+	glc-capture -pso $@ $(EXECUTABLE)
+
 $(EXECUTABLE): $(OBJECTS) $(EXTRA)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJECTS) $(EXTRA) $(LDLIBS)
 
@@ -128,5 +139,4 @@ distclean: clean
 	rm -rf *.html *.js *.data *.wasm
 	rm -rf *-web-*/ *output/
 
-
-.PHONY: all echo clean distclean run package wasm web
+.PHONY: all echo clean distclean run package wasm web video
