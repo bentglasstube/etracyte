@@ -28,6 +28,17 @@ void Character::bouncev(const Rect& box, double bounce) {
   vy_ *= -bounce;
 }
 
+void Character::normalize_position(const Planet& map) {
+  const int width = map.pixel_width();
+  const int height = map.pixel_height();
+
+  while (x_ < 0) x_ += width;
+  while (x_ >= width) x_ -= width;
+
+  while (y_ < 0) y_ += height;
+  while (y_ >= height) y_ -= height;
+}
+
 void Character::set_position(double x, double y) {
   x_ = x;
   y_ = y;

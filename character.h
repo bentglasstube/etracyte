@@ -24,6 +24,7 @@ class Character {
     virtual Rect hitbox() const = 0;
     bool collision(const Rect& other) const;
 
+    void normalize_position(const Planet& map);
     void set_position(double x, double y);
     double dist2(const Character& other) const;
 
