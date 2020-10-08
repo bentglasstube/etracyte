@@ -165,6 +165,7 @@ void PlanetScreen::draw(Graphics& graphics) const {
   const int yo = camera_.yoffset();
   const int pw = planet_.pixel_width();
 
+  graphics.clear(0x222034ff);
   for (const auto& star : stars_) {
     star.draw(graphics, xo, yo);
   }

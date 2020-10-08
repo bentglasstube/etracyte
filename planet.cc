@@ -12,7 +12,7 @@ Planet::Planet() : sprites_("terrain.png", 9, 16, 16) {}
 void Planet::generate(unsigned int seed) {
   rng_.seed(seed);
 
-  std::uniform_real_distribution<double> rns(0.0, 1.0);
+  std::uniform_real_distribution<double> rns(0.0, 256.0);
   const double noise_seed = rns(rng_);
 
   for (int x = 0; x < kMapWidth; ++x) {
