@@ -18,9 +18,8 @@ class Planet {
         enum Value : uint8_t { Air, Rock, Cave, OOB, Grass };
 
         Tile() = default;
-        constexpr Tile(Value v) : Tile(v, -1, -1, 0) {}
-        constexpr Tile(Value v, int x, int y) : Tile(v, x, y, 0) {}
-        constexpr Tile(Value v, int x, int y, int var) : value(v), x(x), y(y), variety(var) {}
+        constexpr Tile(Value v) : Tile(v, -1, -1) {}
+        constexpr Tile(Value v, int x, int y) : value(v), x(x), y(y), sprite(0) {}
 
         operator Value() const { return value; }
         explicit operator bool() = delete;
@@ -44,10 +43,8 @@ class Planet {
           return 0.0005;
         }
 
-        int sprite() const;
-
         Value value;
-        int x, y, variety;
+        int x, y, sprite;
     };
 
     Planet();
@@ -62,7 +59,6 @@ class Planet {
 
     Tile collision(Rect box, double dx, double dy) const;
     Tile get_random_tile(Tile::Value type); // not const, affects rng
-    Tile get_tile(int x, int y) const;
 
   private:
 
@@ -78,10 +74,13 @@ class Planet {
     void set_tile(int x, int y, Tile::Value v);
     int index(int x, int y) const;
     Tile check_tiles(int x1, int x2, int y1, int y2) const;
+    Tile get_tile(int x, int y) const;
 
     bool wall(int x, int y) const;
     int nearby(int x, int y, Tile::Value v, int dist = 1) const;
     void smooth_caves();
+    void smooth_peaks();
+    void pick_sprite(int x, int y, int n);
 
     double surface_x(int x) const { return x / 128.0f; }
     double cave_x(int x) const { return x / 64.0f; }

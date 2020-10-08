@@ -7,7 +7,7 @@
 #define STB_PERLIN_IMPLEMENTATION
 #include "stb_perlin.h"
 
-Planet::Planet() : sprites_("terrain.png", 9, 16, 16) {}
+Planet::Planet() : sprites_("terrain.png", 16, 16, 16) {}
 
 void Planet::generate(unsigned int seed) {
   rng_.seed(seed);
@@ -38,13 +38,14 @@ void Planet::generate(unsigned int seed) {
 
   smooth_caves();
   smooth_caves();
+  smooth_peaks();
 
   for (int x = 0; x < kMapWidth; ++x) {
     int n = 0;
     for (int y = 0; y < kMapHeight; ++y) {
       Tile t = get_tile(x, y);
       if (t == Tile::Cave) {
-        if (++n < 2) set_tile(x, y, Tile::Air);
+        if (++n < 5) set_tile(x, y, Tile::Air);
       } else if (t == Tile::Rock) {
         if (get_tile(x, y - 1) == Tile::Air) {
           set_tile(x, y, Tile::Grass);
@@ -73,23 +74,11 @@ void Planet::generate(unsigned int seed) {
           }
         }
       }
+
+      pick_sprite(x, y, percent(rng_) % 4);
     }
   }
-}
 
-int Planet::Tile::sprite() const {
-  switch (value) {
-    case Planet::Tile::Air:
-      return 0 + variety;
-    case Planet::Tile::Cave:
-      return 18 + variety;
-    case Planet::Tile::Rock:
-      return 9 + variety;
-    case Planet::Tile::Grass:
-      return 27 + variety;
-    default:
-      return 0;
-  }
 }
 
 Item Planet::take_item(double x, double y) {
@@ -118,7 +107,10 @@ void Planet::draw(Graphics& graphics, int xo, int yo) const {
     int gx = -(xo % kTileSize);
     while (gx < graphics.width()) {
       const Tile t = get_tile(tx, ty);
-      if (t != Tile::Air) sprites_.draw(graphics, t.sprite(), gx, gy);
+      if (t != Tile::Air) {
+        if (t == Tile::Rock) sprites_.draw(graphics, 100 + t.sprite % 4, gx, gy);
+        sprites_.draw(graphics, t.sprite, gx, gy);
+      }
       ++tx;
       gx += kTileSize;
     }
@@ -159,6 +151,19 @@ void Planet::smooth_caves() {
   }
 }
 
+void Planet::smooth_peaks() {
+  for (int y = 0; y < kMapHeight - 1; ++y) {
+    for (int x = 0; x < kMapWidth; ++x) {
+      Tile& t = tiles_[index(x, y)];
+      if (t == Tile::Cave) {
+        bool l = get_tile(x - 1, y) == Tile::Air;
+        bool r = get_tile(x + 1, y) == Tile::Air;
+        if (l && r) t.value = Tile::Air;
+      }
+    }
+  }
+}
+
 int Planet::nearby(int x, int y, Tile::Value v, int dist) const {
   int count = 0;
 
@@ -173,9 +178,7 @@ int Planet::nearby(int x, int y, Tile::Value v, int dist) const {
 void Planet::set_tile(int x, int y, Tile::Value v) {
   assert(x >= 0 && x < kMapWidth);
   assert(y >= 0 && y < kMapHeight);
-  std::uniform_int_distribution<int> flavor(0, 3);
-
-  tiles_[index(x, y)] = Tile(v, x, y, flavor(rng_));
+  tiles_[index(x, y)] = Tile(v, x, y);
 }
 
 Planet::Tile Planet::tile(double x, double y) const {
@@ -242,5 +245,41 @@ Planet::Tile Planet::get_random_tile(Tile::Value v) {
   while (true) {
     const Tile t = get_tile(xr(rng_), yr(rng_));
     if (t == v) return t;
+  }
+}
+
+inline int border_offset(bool a, bool b) {
+  if (a && b ) return 3;
+  if (a) return 0;
+  if (b) return 2;
+  return 1;
+}
+
+void Planet::pick_sprite(int x, int y, int n) {
+  Tile& t = tiles_[index(x, y)];
+
+  if (t.value == Tile::Grass) {
+    bool l = !get_tile(x - 1, y).obstructs();
+    bool r = !get_tile(x + 1, y).obstructs();
+    t.sprite = n + 4 * border_offset(l, r);
+  } else if (t.value == Tile::Rock) {
+    bool u = !get_tile(x, y - 1).obstructs();
+    bool d = !get_tile(x, y + 1).obstructs();
+    bool l = !get_tile(x - 1, y).obstructs();
+    bool r = !get_tile(x + 1, y).obstructs();
+    t.sprite = 16 + n + 4 * border_offset(l, r) + 16 * border_offset(u, d);
+  } else if (t.value == Tile::Cave) {
+    bool l = get_tile(x - 1, y) == Tile::Air;
+    bool r = get_tile(x + 1, y) == Tile::Air;
+    bool u = get_tile(x, y - 1) == Tile::Air;
+    t.sprite = 80 + n + 4 * border_offset(l, r) + 16 * border_offset(u, false);
+
+    if (t.sprite - n == 100) {
+      bool ul = get_tile(x - 1, y - 1) == Tile::Air;
+      bool ur = get_tile(x + 1, y - 1) == Tile::Air;
+      if (ul && ur) t.sprite -= 16;
+      if (ul) t.sprite += 12;
+      if (ur) t.sprite += 20;
+    }
   }
 }

@@ -30,11 +30,10 @@ PlanetScreen::PlanetScreen(GameState gs) :
   std::uniform_int_distribution<int> rx(0, planet_.pixel_width() / 4);
   std::uniform_int_distribution<int> ry(0, planet_.pixel_height() / 4);
   std::uniform_int_distribution<Graphics::Color> rc(200, 255);
-  std::uniform_int_distribution<int> rscale(32, 64);
 
   for (int i = 0; i < kStars; ++i) {
     stars_.push_back({
-        rx(rng_), ry(rng_), rscale(rng_),
+        rx(rng_), ry(rng_),
         rc(rng_) << 24 | rc(rng_) << 16 | rc(rng_) << 8 | 0xff,
     });
   }
@@ -224,7 +223,7 @@ Screen* PlanetScreen::next_screen() const {
 void PlanetScreen::spawn_enemy() {
   auto tile = planet_.get_random_tile(Planet::Tile::Cave);
   while (tile == Planet::Tile::Cave) {
-    tile = planet_.get_tile(tile.x, tile.y - 1);
+    tile = planet_.tile(tile.x * 16, tile.y * 16 - 1);
   }
 
   if (tile == Planet::Tile::Rock) {
