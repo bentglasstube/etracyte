@@ -18,6 +18,9 @@ class Enemy : public Character {
     void update(Audio& audio, const Planet& map, const Character& target, unsigned int elapsed);
     void draw(Graphics& graphics, int xo, int yo) const;
 
+    int width() const override { return 8; }
+    int height() const override { return 6; }
+
     Rect boxh() const;
     Rect boxv() const;
     Rect hitbox() const;

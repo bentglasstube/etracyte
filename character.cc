@@ -2,11 +2,10 @@
 
 #include <cassert>
 
-Character::Character(int width, int height) :
+Character::Character() :
   sprites_("sprites.png", 5, 16, 32),
   facing_(Facing::Right),
   grounded_(true),
-  width_(width), height_(height),
   x_(0), y_(0), vx_(0), vy_(0) {}
 
 bool Character::collision(const Rect& other) const {
@@ -14,7 +13,7 @@ bool Character::collision(const Rect& other) const {
 }
 
 void Character::bounceh(const Rect& box, double bounce) {
-  x_ = vx_ > 0 ? box.left - width_ / 2 : box.right + width_ / 2;
+  x_ = vx_ > 0 ? box.left - width() / 2 : box.right + width() / 2;
   vx_ *= -bounce;
 }
 
@@ -23,7 +22,7 @@ void Character::bouncev(const Rect& box, double bounce) {
     y_ = box.top;
     grounded_ = true;
   } else {
-    y_ = box.bottom + height_;
+    y_ = box.bottom + height();
   }
   vy_ *= -bounce;
 }

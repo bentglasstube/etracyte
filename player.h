@@ -14,6 +14,9 @@ class Player : public Character {
     void update(const Planet& map, Audio& audio, unsigned int elapsed);
     void draw(Graphics& graphics, int xo, int yo) const;
 
+    int width() const override { return 16; };
+    int height() const override { return jumping() || ducking() ? 28 : 32; }
+
     void move_left();
     void move_right();
     void stop();
@@ -37,10 +40,6 @@ class Player : public Character {
     static constexpr double kJumpSpeed = 0.35;
     static constexpr double kJumpCutSpeed = 0.15;
     static constexpr double kBonkForce = 0.2;
-
-    static constexpr int kWidth = 16;
-    static constexpr int kHalfWidth = kWidth / 2;
-    static constexpr int kHeight = 32;
 
     int ax_, timer_;
     bool ducking_;

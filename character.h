@@ -10,14 +10,14 @@ class Character {
   public:
 
     enum class Facing { Left, Right };
-    Character(int width, int height);
+    Character();
     virtual ~Character() = default;
 
     double x() const { return x_; }
     double y() const { return y_; }
 
-    int width() const { return width_; }
-    int height() const { return height_; }
+    virtual int width() const = 0;
+    virtual int height() const = 0;
 
     bool grounded() const { return grounded_; }
 
@@ -34,7 +34,6 @@ class Character {
     Facing facing_;
 
     bool grounded_;
-    int width_, height_;
     double x_, y_, vx_, vy_;
 
     virtual int sprite() const = 0;

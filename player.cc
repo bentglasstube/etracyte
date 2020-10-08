@@ -13,7 +13,7 @@ std::string _str(const double v, int n = 2) {
 }
 #endif
 
-Player::Player() : Character(kWidth, kHeight)
+Player::Player() : Character()
 #ifndef NDEBUG
    , text_("text-tiny.png", 8, 8)
 #endif
@@ -25,7 +25,7 @@ void Player::update(const Planet& map, Audio& audio, unsigned int elapsed) {
 }
 
 void Player::draw(Graphics& graphics, int xo, int yo) const {
-  sprites_.draw_ex(graphics, sprite(), x() - kHalfWidth - xo, y() - kHeight - yo, facing_ == Facing::Left, 0, 0, 0);
+  sprites_.draw_ex(graphics, sprite(), x() - width() / 2 - xo, y() - 32 - yo, facing_ == Facing::Left, 0, 0, 0);
 
 #ifndef NDEBUG
   boxh().draw(graphics, xo, yo, 0x0000ffff, false);
@@ -109,11 +109,11 @@ void Player::updatey(const Planet& map, Audio& audio, unsigned int elapsed) {
 }
 
 Rect Player::boxh() const {
-  return Rect(x_ - kHalfWidth, y_ - kHeight + 4, x_ + kHalfWidth, y_ - 4);
+  return Rect(x_ - width() / 2, y_ - height() + 8, x_ + width() / 2, y_ - 4);
 }
 
 Rect Player::boxv() const {
-  return Rect(x_ - kHalfWidth + 4, y_ - kHeight + (jumping() || ducking() ? 4 : 0), x_ + kHalfWidth - 4, y_);
+  return Rect(x_ - width() / 2 + 4, y_ - height(), x_ + width() / 2 - 4, y_);
 }
 
 int Player::sprite() const {
@@ -125,5 +125,5 @@ int Player::sprite() const {
 }
 
 Rect Player::hitbox() const {
-  return Rect(x_ - kHalfWidth, y_ - kHeight + (jumping() || ducking() ? 4 : 0), x_ + kHalfWidth, y_);
+  return Rect(x_ - width() / 2, y_ - height(), x_ + width() / 2, y_);
 }

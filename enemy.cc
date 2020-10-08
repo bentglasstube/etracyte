@@ -1,7 +1,7 @@
 #include "enemy.h"
 
 Enemy::Enemy(double x, double y, unsigned int seed) :
-  Character(8, 6), state_(State::Waiting),
+  state_(State::Waiting),
   timer_(0), ay_(0)
 {
   set_position(x, y);
@@ -41,20 +41,21 @@ void Enemy::draw(Graphics& graphics, int xo, int yo) const {
 #ifndef NDEBUG
   hitbox().draw(graphics, xo, yo, 0x00ffd833, false);
 #endif
-  sprites_.draw(graphics, sprite(), x() - width_ / 2 - xo, y() - height_ - yo);
+  sprites_.draw(graphics, sprite(), x() - width() / 2 - xo, y() - height() - yo);
 }
 
 Rect Enemy::boxh() const {
-  return Rect(x_ - width_ / 2, y_ - height_ + 1, x_ + width_ / 2, y_ - 1);
+  return Rect(x_ - width() / 2, y_ - height() + 1, x_ + width() / 2, y_ - 1);
 }
 
 Rect Enemy::boxv() const {
-  return Rect(x_ - width_ / 2 + 2, y_ - height_, x_ + width_ / 2 - 2, y_);
+  return Rect(x_ - width() / 2 + 2, y_ - height(), x_ + width() / 2 - 2, y_);
 }
 
 Rect Enemy::hitbox() const {
-  return Rect(x_ - width_ / 2, y_ - height_, x_ + width_ / 2, y_);
+  return Rect(x_ - width() / 2, y_ - height(), x_ + width() / 2, y_);
 }
+
 int Enemy::sprite() const {
   switch (state_) {
     case State::Waiting:
