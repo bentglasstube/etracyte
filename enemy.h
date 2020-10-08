@@ -23,8 +23,8 @@ class Enemy : public Character {
 
     Rect boxh() const;
     Rect boxv() const;
-    Rect hitbox() const;
-    int sprite() const;
+    Rect hitbox() const override;
+    int sprite() const override;
 
   private:
 
