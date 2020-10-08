@@ -233,6 +233,5 @@ void PlanetScreen::spawn_enemy() {
 }
 
 void PlanetScreen::Star::draw(Graphics& graphics, int xo, int yo) const {
-  graphics.draw_pixel({x - xo / scale, y - yo / scale}, color);
+  graphics.draw_pixel({x - xo / 16, y - yo / 4}, color);
 }
-

@@ -31,7 +31,7 @@ class PlanetScreen : public Screen {
     static constexpr int kStars = 2000;
 
     struct Star {
-      int x, y, scale;
+      int x, y;
       Graphics::Color color;
       void draw(Graphics& graphics, int xo, int yo) const;
     };
