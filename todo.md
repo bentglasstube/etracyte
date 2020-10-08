@@ -1,46 +1,39 @@
 Etracyte To Do List
 -------------------
 
-Ludum Dare
-==========
-
-[x] Make bats do something
-[x] Ship screen
-[x] Name game
-[x] Title screen
-[x] Music
-[x] Return to ship
-[x] In-game story
-[x] Game Progression
-[x] More Music
-
-Post Jam
-========
-
 ### Fixes
 
 [x] Fix friction
 [ ] Fix wrapping
-[ ] Allow fixed seeding
+[x] Allow fixed seeding
 
 ### Graphical improvements
 
 [x] Parallax starfield background
-[ ] Improved terrain graphics
+[x] Improved terrain graphics
 [ ] Ship on title screen
+[ ] Planet appears on viewfinder
 
 ### Story Improvements
 
-[ ] Planet names
 [ ] In-game hints
+[ ] Planet names
+[ ] Planet stats
+[ ] Planet biomes
+  [ ] Ice
+  [ ] Water
+  [ ] Dust?
+  [ ] Jungle
+  [ ] Ruins
 
 ### New Mechanics
 
-[ ] Bird Boss
-[ ] Get into orbit
+[ ] Upgrade system
+[ ] Map system
 [ ] Health/Damage/Knockback
 [ ] More enemies
-[ ] Multiple biomes
+[ ] Bird Boss
+[ ] Get into orbit
 [ ] More resources
 
 Progression Ideas
