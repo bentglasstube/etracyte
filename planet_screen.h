@@ -54,5 +54,6 @@ class PlanetScreen : public Screen {
     int computer_timer_, hint_timer_, warp_timer_;
 
     void spawn_enemy();
+    void show_hint(const std::string& text);
 
 };

@@ -66,6 +66,9 @@ bool PlanetScreen::update(const Input& input, Audio& audio, unsigned int elapsed
         --fuel_;
         audio.play_random_sample("jetpack.wav", 8);
         astronaut_.jump();
+        if (fuel_ == 5 && gs_.crystals == 0) {
+          show_hint("My suit is running low on power.  I need to use it carefully.");
+        }
       } else {
         audio.play_random_sample("nope.wav", 8);
       }
@@ -115,12 +118,10 @@ bool PlanetScreen::update(const Input& input, Audio& audio, unsigned int elapsed
         } else {
           audio.play_random_sample("nope.wav", 8);
           state_ = State::Playing;
-          hint_timer_ = 0;
-
           if (gs_.requirement() == 1) {
-            hint_ = "The computer said I need to find some crystals.";
+            show_hint("The computer said I need to find some crystals.");
           } else {
-            hint_ = "I need " + std::to_string(gs_.requirement()) + " crystals before I can head back.";
+            show_hint("I need " + std::to_string(gs_.requirement()) + " crystals before I can head back.");
           }
         }
       } else {
@@ -234,4 +235,9 @@ void PlanetScreen::spawn_enemy() {
 
 void PlanetScreen::Star::draw(Graphics& graphics, int xo, int yo) const {
   graphics.draw_pixel({x - xo / 16, y - yo / 4}, color);
+}
+
+void PlanetScreen::show_hint(const std::string& text) {
+  hint_timer_ = 0;
+  hint_ = text;
 }

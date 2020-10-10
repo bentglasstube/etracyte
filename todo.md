@@ -6,6 +6,7 @@ Etracyte To Do List
 [x] Fix friction
 [ ] Fix wrapping
 [x] Allow fixed seeding
+[ ] Don't double jump near the ground
 
 ### Graphical improvements
 
