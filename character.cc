@@ -57,3 +57,21 @@ double Character::apply_friction(double f, double v, unsigned int t) {
 double Character::apply_acceleration(double a, double m, double v, unsigned int t) {
   return a > 0 ? std::min(m, v + a * t) : std::max(-m, v + a * t);
 }
+
+double Character::ground_height(const Planet& map) const {
+  const double x1 = boxv().left;
+  const double x2 = boxv().right;
+  double y = y_;
+
+  while (true) {
+    const Planet::Tile t1 = map.tile(x1, y);
+    if (t1.obstructs()) return std::max(0.0, t1.rect().top - y_);
+
+    const Planet::Tile t2 = map.tile(x2, y);
+    if (t2.obstructs()) return std::max(0.0, t2.rect().top - y_);
+
+    y = t2.rect().bottom + 1;
+  }
+
+  return 0;
+}

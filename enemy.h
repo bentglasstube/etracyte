@@ -21,8 +21,8 @@ class Enemy : public Character {
     int width() const override { return 8; }
     int height() const override { return 6; }
 
-    Rect boxh() const;
-    Rect boxv() const;
+    Rect boxh() const override;
+    Rect boxv() const override;
     Rect hitbox() const override;
     int sprite() const override;
 

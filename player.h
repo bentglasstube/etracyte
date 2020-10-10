@@ -52,8 +52,8 @@ class Player : public Character {
     void updatex(const Planet& map, unsigned int elapsed);
     void updatey(const Planet& map, Audio& audio, unsigned int elapsed);
 
-    Rect boxh() const;
-    Rect boxv() const;
+    Rect boxh() const override;
+    Rect boxv() const override;
     int sprite() const override;
 
     bool walking() const { return grounded() && ax_ != 0; }

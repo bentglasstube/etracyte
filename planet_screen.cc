@@ -62,15 +62,17 @@ bool PlanetScreen::update(const Input& input, Audio& audio, unsigned int elapsed
     if (input.key_pressed(Input::Button::A)) {
       if (astronaut_.grounded()) {
         astronaut_.jump();
-      } else if (fuel_ > 0) {
-        --fuel_;
-        audio.play_random_sample("jetpack.wav", 8);
-        astronaut_.jump();
-        if (fuel_ == 5 && gs_.crystals == 0) {
-          show_hint("My suit is running low on power.  I need to use it carefully.");
+      } else if (astronaut_.ground_height(planet_) >= 32.0) {
+        if (fuel_ > 0) {
+          --fuel_;
+          audio.play_random_sample("jetpack.wav", 8);
+          astronaut_.jump();
+          if (fuel_ == 5 && gs_.crystals == 0) {
+            show_hint("My suit is running low on power.  I need to use it carefully.");
+          }
+        } else {
+          audio.play_random_sample("nope.wav", 8);
         }
-      } else {
-        audio.play_random_sample("nope.wav", 8);
       }
     }
 
@@ -215,6 +217,10 @@ void PlanetScreen::draw(Graphics& graphics) const {
   if (!hint_.empty() && hint_timer_ < 5000) {
     text_.draw(graphics, hint_, graphics.width() / 2, 420, Text::Alignment::Center);
   }
+
+#ifndef NDEBUG
+  text_.draw(graphics, std::to_string(astronaut_.ground_height(planet_)), 512, 440, Text::Alignment::Right);
+#endif
 }
 
 Screen* PlanetScreen::next_screen() const {

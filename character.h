@@ -27,6 +27,7 @@ class Character {
     void normalize_position(const Planet& map);
     void set_position(double x, double y);
     double dist2(const Character& other) const;
+    double ground_height(const Planet& map) const;
 
   protected:
 
@@ -37,6 +38,8 @@ class Character {
     double x_, y_, vx_, vy_;
 
     virtual int sprite() const = 0;
+    virtual Rect boxh() const { return hitbox(); }
+    virtual Rect boxv() const { return hitbox(); }
 
     void bounceh(const Rect& box, double bounce = 0.0);
     void bouncev(const Rect& box, double bounce = 0.0);
