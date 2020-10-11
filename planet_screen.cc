@@ -220,6 +220,9 @@ void PlanetScreen::draw(Graphics& graphics) const {
 
 #ifndef NDEBUG
   text_.draw(graphics, std::to_string(astronaut_.ground_height(planet_)), 512, 440, Text::Alignment::Right);
+
+  const Rect c = camera_.focus();
+  c.draw(graphics, xo, yo, 0xd8ff00ff, false);
 #endif
 }
 
