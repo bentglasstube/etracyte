@@ -14,6 +14,7 @@ Etracyte To Do List
 [x] Improved terrain graphics
 [ ] Ship on title screen
 [ ] Planet appears on viewfinder
+[ ] Lighting shader
 
 ### Story Improvements
 
@@ -50,6 +51,9 @@ Collect crystals, return to ship.  Use crystals to purchase upgrades.
  * Faster Transport - Reduced transport time
  * Suit Battery - More room for activities
  * Power Drill - Use suit's power to drill dirt
+ * Grappling Hook - Swing from the ceiling
+ * Map Module - See where you've been
+ * Crystal Scanner - Find nearby crystals
 
 Use crystals to refill ship reserves, allowing you to travel to other
 planets.
