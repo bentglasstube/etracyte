@@ -2,10 +2,10 @@
 
 Enemy::Enemy(double x, double y, unsigned int seed) :
   state_(State::Waiting),
-  timer_(0), ay_(0)
+  timer_(0), ay_(0),
+  rng_(seed)
 {
   set_position(x, y);
-  rng_.seed(seed);
 }
 
 void Enemy::update(Audio& audio, const Planet& map, const Character& target, unsigned int elapsed) {

@@ -7,11 +7,16 @@
 #define STB_PERLIN_IMPLEMENTATION
 #include "stb_perlin.h"
 
-Planet::Planet() : sprites_("terrain.png", 16, 16, 16) {}
+Planet::Planet(unsigned int seed) :
+  sprites_("terrain.png", 16, 16, 16),
+  rng_(seed)
+{}
 
-void Planet::generate(unsigned int seed) {
-  rng_.seed(seed);
+void Planet::generate_lore() {
+  // TODO
+}
 
+void Planet::generate() {
   std::uniform_real_distribution<double> rns(0.0, 256.0);
   const double noise_seed = rns(rng_);
 

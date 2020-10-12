@@ -47,8 +47,6 @@ class PlanetScreen : public Screen {
     std::vector<Star> stars_;
     std::string hint_;
 
-    std::mt19937 rng_;
-
     int crystals_, fuel_;
     int choice_;
     int computer_timer_, hint_timer_, warp_timer_;

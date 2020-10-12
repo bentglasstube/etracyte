@@ -47,8 +47,9 @@ class Planet {
         int x, y, sprite;
     };
 
-    Planet();
-    void generate(unsigned int seed);
+    Planet(unsigned int seed);
+    void generate_lore();
+    void generate();
 
     Item take_item(double x, double y);
     void draw(Graphics& graphics, int xo, int yo) const;

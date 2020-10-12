@@ -50,7 +50,6 @@ class ShipScreen : public Screen {
 
     std::vector<Star> stars_;
     std::unique_ptr<AppearingText> message_;
-    std::mt19937 rng_;
 
     void update_stars(unsigned int elapsed);
     void transition(State state);

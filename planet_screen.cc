@@ -3,8 +3,6 @@
 #include <algorithm>
 #include <iostream>
 
-#include "util.h"
-
 #include "ship_screen.h"
 
 PlanetScreen::PlanetScreen(GameState gs) :
@@ -12,12 +10,10 @@ PlanetScreen::PlanetScreen(GameState gs) :
   text_("text-tiny.png", 8, 8),
   hud_("ui.png", 4, 8, 8),
   alerts_("alerts.png", 1, 240, 112),
-  planet_(), camera_(), astronaut_(), state_(State::Playing),
+  planet_(gs_.rng()), camera_(), astronaut_(), state_(State::Playing),
   crystals_(0), fuel_(10)
 {
-  rng_.seed(Util::random_seed());
-
-  planet_.generate(rng_());
+  planet_.generate();
   astronaut_.set_position(planet_.pixel_width() / 2, -100);
   camera_.snap(astronaut_, planet_);
 
@@ -25,16 +21,14 @@ PlanetScreen::PlanetScreen(GameState gs) :
     spawn_enemy();
   }
 
-  rng_.seed(Util::random_seed());
-
   std::uniform_int_distribution<int> rx(0, planet_.pixel_width() / 4);
   std::uniform_int_distribution<int> ry(0, planet_.pixel_height() / 4);
   std::uniform_int_distribution<Graphics::Color> rc(200, 255);
 
   for (int i = 0; i < kStars; ++i) {
     stars_.push_back({
-        rx(rng_), ry(rng_),
-        rc(rng_) << 24 | rc(rng_) << 16 | rc(rng_) << 8 | 0xff,
+        rx(gs_.rng), ry(gs_.rng),
+        rc(gs_.rng) << 24 | rc(gs_.rng) << 16 | rc(gs_.rng) << 8 | 0xff,
     });
   }
 }
@@ -238,7 +232,7 @@ void PlanetScreen::spawn_enemy() {
 
   if (tile == Planet::Tile::Rock) {
     const auto r = tile.rect();
-    enemies_.emplace_back((r.left + r.right) / 2, r.bottom + 6, rng_());
+    enemies_.emplace_back((r.left + r.right) / 2, r.bottom + 6, gs_.rng());
   }
 }
 

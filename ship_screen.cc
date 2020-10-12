@@ -4,8 +4,6 @@
 #include <cmath>
 #include <vector>
 
-#include "util.h"
-
 #include "planet_screen.h"
 
 ShipScreen::ShipScreen(GameState gs) :
@@ -13,16 +11,14 @@ ShipScreen::ShipScreen(GameState gs) :
   alerts_("alerts.png", 1, 240, 112),
   state_(State::Hyperspeed), stretch_(1000.0), timer_(0)
 {
-  rng_.seed(Util::random_seed());
-
   std::uniform_real_distribution<double> vel(0.04, 0.08);
   std::uniform_real_distribution<double> angle(0.00, 2 * M_PI);
   std::uniform_int_distribution<int> color(200, 255);
 
   while (stars_.size() < 600) {
-    double v = vel(rng_);
-    double a = angle(rng_);
-    Graphics::Color c = color(rng_) << 24 | color(rng_) << 16 | color(rng_) << 8;
+    double v = vel(gs_.rng);
+    double a = angle(gs_.rng);
+    Graphics::Color c = color(gs_.rng) << 24 | color(gs_.rng) << 16 | color(gs_.rng) << 8;
     stars_.push_back({0, 0, v * std::cos(a), v * std::sin(a), c});
   }
 
@@ -57,7 +53,7 @@ bool ShipScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
       if (message_->done() && input.any_pressed()) {
         transition(State::Hyperspeed);
         std::uniform_int_distribution<int> hs(3000, 10000);
-        hyperspace_time_ = hs(rng_);
+        hyperspace_time_ = hs(gs_.rng);
       }
       break;
 
