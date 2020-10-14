@@ -128,7 +128,7 @@ $(NAME)-linux-$(VERSION).AppDir: $(EXECUTABLE) $(CONTENT) AppRun icon.png $(NAME
 	cp /usr/lib/libSDL2{,_image,_mixer}-2.0.so.0 $@/usr/lib/.
 
 $(NAME)-linux-$(VERSION).AppImage: $(NAME)-linux-$(VERSION).AppDir
-	ARCH=x86_64 appimagetool $<
+	ARCH=x86_64 appimagetool $< $@
 
 clean:
 	rm -rf $(BUILDDIR)
