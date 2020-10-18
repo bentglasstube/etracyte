@@ -35,7 +35,7 @@ ifeq ($(UNAME), Linux)
 endif
 ifeq ($(UNAME), Darwin)
 	PACKAGE=$(NAME)-osx-$(VERSION).tgz
-	LDLIBS=-framework SDL2 -framework SDL2_mixer -framework SDL2_image -rpath @executable_path/../Frameworks
+	LDLIBS=-framework SDL2 -framework SDL2_mixer -framework SDL2_image -rpath @executable_path/../Frameworks -F /Library/Frameworks/
 	CFLAGS+=-mmacosx-version-min=10.9
 endif
 
