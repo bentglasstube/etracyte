@@ -1,6 +1,6 @@
 bazel-*
 /*.zip
-/*.tgz
+/*.dmg
 /*.app
 /*.AppImage
 /*.AppDir
