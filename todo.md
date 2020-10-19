@@ -3,43 +3,43 @@ Etracyte To Do List
 
 ### Fixes
 
-[x] Fix friction
-[x] Fix wrapping
-  [ ] Fix enemy distance check
-  [ ] Fix starfield looping
-[x] Allow fixed seeding
-[x] Don't double jump near the ground
+- [x] Fix friction
+- [x] Fix wrapping
+  - [ ] Fix enemy distance check
+  - [ ] Fix starfield looping
+- [x] Allow fixed seeding
+- [x] Don't double jump near the ground
 
 ### Graphical improvements
 
-[x] Parallax starfield background
-[x] Improved terrain graphics
-[ ] Ship on title screen
-[ ] Planet appears on viewfinder
-[ ] Lighting shader
+- [x] Parallax starfield background
+- [x] Improved terrain graphics
+- [ ] Ship on title screen
+- [ ] Planet appears on viewfinder
+- [ ] Lighting shader
 
 ### Story Improvements
 
-[ ] In-game hints
-[ ] Planet names
-[x] Planet stats
-[ ] Planet biomes
-  [x] Rocky
-  [ ] Ice
-  [ ] Water
-  [ ] Dust?
-  [ ] Jungle
-  [ ] Ruins
+- [ ] In-game hints
+- [ ] Planet names
+- [x] Planet stats
+- [ ] Planet biomes
+  - [x] Rocky
+  - [ ] Ice
+  - [ ] Water
+  - [ ] Dust?
+  - [ ] Jungle
+  - [ ] Ruins
 
 ### New Mechanics
 
-[ ] Upgrade system
-[ ] Map system
-[ ] Health/Damage/Knockback
-[ ] More enemies
-[ ] Bird Boss
-[ ] Get into orbit
-[ ] More resources
+- [ ] Upgrade system
+- [ ] Map system
+- [ ] Health/Damage/Knockback
+- [ ] More enemies
+- [ ] Bird Boss
+- [ ] Get into orbit
+- [ ] More resources
 
 Progression Ideas
 =================
