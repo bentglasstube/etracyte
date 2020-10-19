@@ -16,6 +16,8 @@ class Camera {
 
     Rect focus() const;
 
+    void xwarp(double amount) { xo_ += amount; }
+
   private:
 
     static constexpr int kWidth = 512;

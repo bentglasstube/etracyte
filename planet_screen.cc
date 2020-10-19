@@ -13,6 +13,7 @@ PlanetScreen::PlanetScreen(GameState gs) :
   planet_(gs_.rng()), camera_(), astronaut_(), state_(State::Playing),
   crystals_(0), fuel_(10)
 {
+  planet_.generate_lore();
   planet_.generate();
   astronaut_.set_position(planet_.pixel_width() / 2, -100);
   camera_.snap(astronaut_, planet_);
@@ -99,6 +100,14 @@ bool PlanetScreen::update(const Input& input, Audio& audio, unsigned int elapsed
 
     astronaut_.update(planet_, audio, elapsed);
     camera_.update(astronaut_, planet_, elapsed);
+
+    if (astronaut_.x() < 0) {
+      astronaut_.xwarp(planet_.pixel_width());
+      camera_.xwarp(planet_.pixel_width());
+    } else if (astronaut_.x() > planet_.pixel_width()) {
+      astronaut_.xwarp(-planet_.pixel_width());
+      camera_.xwarp(-planet_.pixel_width());
+    }
 
   } else if (state_ == State::Paused) {
 

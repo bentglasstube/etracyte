@@ -25,8 +25,6 @@ void Planet::generate_lore() {
 }
 
 void Planet::generate() {
-  generate_lore();
-
   std::uniform_real_distribution<double> rns(0.0, 256.0);
   const double noise_seed = rns(rng_);
 

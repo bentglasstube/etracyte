@@ -4,9 +4,11 @@ Etracyte To Do List
 ### Fixes
 
 [x] Fix friction
-[ ] Fix wrapping
+[x] Fix wrapping
+  [ ] Fix enemy distance check
+  [ ] Fix starfield looping
 [x] Allow fixed seeding
-[ ] Don't double jump near the ground
+[x] Don't double jump near the ground
 
 ### Graphical improvements
 

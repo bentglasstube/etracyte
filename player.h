@@ -28,6 +28,8 @@ class Player : public Character {
     bool ducking() const { return ducking_; }
     Rect hitbox() const override;
 
+    void xwarp(double amount) { x_ += amount; }
+
   private:
 
     static constexpr double kMaxFall = 0.5;
