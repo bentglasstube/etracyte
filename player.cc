@@ -93,7 +93,7 @@ void Player::updatex(const Planet& map, unsigned int elapsed) {
 }
 
 void Player::updatey(const Planet& map, Audio& audio, unsigned int elapsed) {
-  vy_ = apply_acceleration(kGravity, kMaxFall, vy_, elapsed);
+  vy_ = apply_acceleration(map.gravity(), kMaxFall, vy_, elapsed);
   grounded_ = false;
 
   Planet::Tile tile = map.collision(boxv(), 0, vy_ * elapsed);

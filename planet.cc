@@ -13,10 +13,20 @@ Planet::Planet(unsigned int seed) :
 {}
 
 void Planet::generate_lore() {
-  // TODO
+  std::uniform_real_distribution<double> r(1737.4, 6371.0);
+  std::uniform_real_distribution<double> g(0.0002, 0.0012);
+
+  biome_ = Biome::Rocky;
+
+  radius_ = r(rng_);
+  mass_ = radius_ * radius_ * g(rng_) / kGravity;
+
+  name_ = "Moon";
 }
 
 void Planet::generate() {
+  generate_lore();
+
   std::uniform_real_distribution<double> rns(0.0, 256.0);
   const double noise_seed = rns(rng_);
 

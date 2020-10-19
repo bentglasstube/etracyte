@@ -20,8 +20,9 @@ Etracyte To Do List
 
 [ ] In-game hints
 [ ] Planet names
-[ ] Planet stats
+[x] Planet stats
 [ ] Planet biomes
+  [x] Rocky
   [ ] Ice
   [ ] Water
   [ ] Dust?

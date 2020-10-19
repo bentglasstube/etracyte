@@ -47,6 +47,8 @@ class Planet {
         int x, y, sprite;
     };
 
+    enum class Biome { Rocky };
+
     Planet(unsigned int seed);
     void generate_lore();
     void generate();
@@ -61,16 +63,27 @@ class Planet {
     Tile collision(Rect box, double dx, double dy) const;
     Tile get_random_tile(Tile::Value type); // not const, affects rng
 
+    std::string name() const { return name_; }
+    Biome biome() const { return biome_; }
+    double mass() const { return mass_; }
+    double radius() const { return radius_; }
+    double gravity() const { return kGravity * mass_ / radius_ / radius_; }
+
   private:
 
     static constexpr int kMapHeight = 256;
     static constexpr int kMapWidth = 1024;
     static constexpr int kTileSize = 16;
+    static constexpr double kGravity = 24.615e-21;
 
     SpriteMap sprites_;
     std::mt19937 rng_;
     std::array<Tile, kMapHeight * kMapWidth> tiles_;
     std::vector<Item> items_;
+
+    std::string name_;
+    double mass_, radius_;
+    Biome biome_;
 
     void set_tile(int x, int y, Tile::Value v);
     int index(int x, int y) const;

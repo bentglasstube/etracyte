@@ -30,7 +30,6 @@ class Player : public Character {
 
   private:
 
-    static constexpr double kGravity = 0.0006;
     static constexpr double kMaxFall = 0.5;
 
     static constexpr double kGroundAccel = 0.001;
