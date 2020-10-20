@@ -51,6 +51,7 @@ cc_library(
     deps = [
         "@libgam//:spritemap",
         ":item",
+        ":name",
         ":rect",
     ],
 )
@@ -113,4 +114,10 @@ cc_library(
         "@libgam//:audio",
         "@libgam//:text",
     ],
+)
+
+cc_library(
+    name = "name",
+    srcs = ["name.cc"],
+    hdrs = ["name.h"],
 )

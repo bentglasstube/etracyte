@@ -2,7 +2,8 @@
 
 #include <algorithm>
 #include <cassert>
-#include <iostream>
+
+#include "name.h"
 
 #define STB_PERLIN_IMPLEMENTATION
 #include "stb_perlin.h"
@@ -21,7 +22,7 @@ void Planet::generate_lore() {
   radius_ = r(rng_);
   mass_ = radius_ * radius_ * g(rng_) / kGravity;
 
-  name_ = "Moon";
+  name_ = Name(rng_()).generate();
 }
 
 void Planet::generate() {
