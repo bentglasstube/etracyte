@@ -68,6 +68,7 @@ class Planet {
     double mass() const { return mass_; }
     double radius() const { return radius_; }
     double gravity() const { return kGravity * mass_ / radius_ / radius_; }
+    int difficulty() const { return 1; }
 
   private:
 

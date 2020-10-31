@@ -10,7 +10,7 @@ PlanetScreen::PlanetScreen(GameState gs) :
   text_("text-tiny.png", 8, 8),
   hud_("ui.png", 4, 8, 8),
   alerts_("alerts.png", 1, 240, 112),
-  planet_(gs_.rng()), camera_(), astronaut_(), state_(State::Playing),
+  planet_(gs_.planet_seed), camera_(), astronaut_(), state_(State::Playing),
   crystals_(0), fuel_(10)
 {
   planet_.generate_lore();
@@ -156,7 +156,7 @@ bool PlanetScreen::update(const Input& input, Audio& audio, unsigned int elapsed
     warp_timer_ += elapsed;
     if (warp_timer_ > 9000) {
       gs_.crystals += crystals_;
-      ++gs_.planets;
+      gs_.next_planet();
 
       return false;
     }

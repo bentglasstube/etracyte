@@ -2,9 +2,12 @@
 
 #include <algorithm>
 #include <cmath>
+#include <iomanip>
+#include <sstream>
 #include <vector>
 
 #include "planet_screen.h"
+#include "name.h"
 
 ShipScreen::ShipScreen(GameState gs) :
   gs_(gs), bridge_("bridge.png"), text_("text-amber.png"),
@@ -163,31 +166,18 @@ void ShipScreen::generate_welcome_message() {
     "look for more."));
 }
 
-/* static constexpr std::vector<std::string_view> kPlanetNameBeginnings = { */
-/*   "Bi", "Tor", "Teri", "Alim", "Cre", "Dri", "Epi", "Fra", "Gro", "Hima", */
-/*   "Jutu", "Kima", "Lu", "Mi", "No", "Noto", "Ori", "Pru", "Qu", "Ria", "Su", */
-/*   "Umako," "Vime", "Wito", "Xi", "Ya", "Zumo", "Api", "Bele", "Cepi", "Do", */
-/*   "Ea", "Fe", "Gato", "Holo", "Ipe", "Jo", "Kala", "Lara", "Meta", "Noxa", */
-/*   "Orra", "Pi", "Quima," "Ro", "Sele", "Ule", "Vi", "Waxa", "Xo", "Yora", */
-/*   "Zuli", */
-/* }; */
-
-/* static constexpr auto kPlanetNameEndings = { */
-/*   "von", "oll", "tol", "gon", "prim", "tes", "lup", "vim", "qua", "pip", "am", */
-/*   "lm", "thor", "gig", "ve", "qum", "la", "leuth", "bas", "ro", "porr", "lia", */
-/*   "w", "kra", "cor", "mmon", */
-/* }; */
-
-/* static constexpr auto kPlanetNumerals = { */
-/*   "I", "II", "III", "IV", "V", "VI", */
-/* }; */
-
 void ShipScreen::generate_planet_lore() {
-  message_.reset(new AppearingText(
-    "New Planet Found\n"
-    "Sensors have discovered\n"
-    "a nearby planet rich in\n"
-    "etracyte crystals.\n"
-    "Go to the surface and\n"
-    "retrieve more.\n"));
+  Planet planet(gs_.planet_seed);
+  planet.generate_lore();
+
+  std::stringstream lore;
+
+  lore << "New Planet Found\n";
+  lore << "Name:   " << std::setw(15) << planet.name() << "\n";
+  lore << "Radius: " << std::setw(13) << std::setprecision(4) << planet.radius() << "km\n";
+  lore << "Mass:   " << std::setw(13) << std::setprecision(3) << planet.mass() << "kg\n";
+  lore << "Biome:  " << std::setw(15) << "Caverns" << "\n";
+  lore << "Difficulty: " << std::setw(11) << "*" << "\n";
+
+  message_.reset(new AppearingText(lore.str()));
 }
