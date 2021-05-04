@@ -17,7 +17,7 @@ int main(int, char**) {
   config.graphics.width = 512;
   config.graphics.height = 448;
   config.graphics.scale = 2;
-  config.graphics.fullscreen = true;
+  config.graphics.fullscreen = false;
 
   Game game(config);
   Screen *start = new TitleScreen();
