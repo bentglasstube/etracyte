@@ -4,7 +4,7 @@ ifeq ($(UNAME), Windows)
 endif
 
 SOURCES=$(wildcard *.cc) $(wildcard gam/*.cc)
-CONTENT=$(wildcard content/*.png) $(wildcard content/*.ogg) $(wildcard content/*.wav)
+CONTENT=$(wildcard content/*)
 ICONS=icon.png
 BUILDDIR=$(CROSS)output
 OBJECTS=$(patsubst %.cc,$(BUILDDIR)/%.o,$(SOURCES))
