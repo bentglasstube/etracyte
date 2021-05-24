@@ -2,7 +2,12 @@
 
 #include <random>
 
+#ifndef NDEBUG
+#define SEED 8675309
+#else
 #include "util.h"
+#define SEED Util::random_seed()
+#endif
 
 struct GameState {
   std::mt19937 rng;
@@ -12,7 +17,7 @@ struct GameState {
 
   static constexpr int kRequired[8] = { 1, 2, 3, 5, 8, 12, 17, 25 };
 
-  GameState() : rng(Util::random_seed()), planet_seed(rng()) {}
+  GameState() : rng(SEED), planet_seed(rng()) {}
 
   int requirement() const {
     return planets < 8 ? kRequired[planets] : 25 + 10 * (planets - 7);
